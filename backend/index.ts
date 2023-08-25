@@ -1,5 +1,10 @@
 import dotenv from "dotenv";
 import express, { Application, Request, Response } from "express";
+import cookieParser from "cookie-parser";
+
+// Routes imports
+import authRoutes from "./routes/Auth.routes";
+
 import { errorHandler, notFound } from "./middlewares/errorHandler";
 
 // Load env vars
@@ -20,12 +25,18 @@ connectDB();
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-// Routes
+app.use(cookieParser());
+
+// Welcom route
 app.get("/", (req: Request, res: Response) => {
   res.json({
     message: "API is running...",
   });
 });
+
+// Routes
+
+app.use("/api/v1/auth", authRoutes);
 
 // Error handler middleware
 app.use(notFound);
