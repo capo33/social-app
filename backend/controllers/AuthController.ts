@@ -29,18 +29,12 @@ const register = async (req: Request, res: Response) => {
     const { password: _, ...userWithoutPassword } = user.toObject(); // we use toObject() instead of _doc in typescript to get the user object without the password
 
     // Set cookies
-    res
-      .cookie("token", token, {
-        expires: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000),
-        httpOnly: true,
-      })
-      .status(201)
-      .json({
-        success: true,
-        message: "User created successfully",
-        ...userWithoutPassword,
-        token,
-      });
+    res.status(201).json({
+      success: true,
+      message: "User created successfully",
+      ...userWithoutPassword,
+      token,
+    });
   } catch (error) {
     if (error instanceof Error)
       res.status(400).json({
@@ -70,18 +64,12 @@ const login = async (req: Request, res: Response) => {
     const { password: _, ...userWithoutPassword } = user.toObject();
 
     // Set cookies
-    res
-      .cookie("token", token, {
-        expires: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000),
-        httpOnly: true,
-      })
-      .status(200)
-      .json({
-        success: true,
-        message: "User logged in successfully",
-        token: token,
-        ...userWithoutPassword,
-      });
+    res.status(200).json({
+      success: true,
+      message: "User logged in successfully",
+      token: token,
+      ...userWithoutPassword,
+    });
   } catch (err) {
     if (err instanceof Error) res.status(500).json({ message: err.message });
   }
