@@ -38,6 +38,11 @@ const PostSchema = new Schema<IPost>(
       type: Schema.Types.ObjectId,
       ref: "User",
     },
+    tags: [
+      {
+        type: String,
+      },
+    ],
   },
   { timestamps: true }
 );

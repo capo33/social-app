@@ -5,6 +5,7 @@ import cookieParser from "cookie-parser";
 // Routes imports
 import authRoutes from "./routes/Auth.routes";
 import userRoutes from "./routes/User.routes";
+import postrRoutes from "./routes/Post.routes";
 
 import { errorHandler, notFound } from "./middlewares/errorHandler";
 
@@ -39,6 +40,7 @@ app.get("/", (req: Request, res: Response) => {
 
 app.use("/api/v1/auth", authRoutes);
 app.use("/api/v1/users", userRoutes);
+app.use("/api/v1/posts", postrRoutes);
 
 // Error handler middleware
 app.use(notFound);

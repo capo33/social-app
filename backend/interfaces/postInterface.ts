@@ -12,4 +12,5 @@ export interface IPost extends Document {
     }
   ];
   postedBy: Types.ObjectId;
+  tags: string[];
 }
