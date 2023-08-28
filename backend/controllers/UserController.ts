@@ -2,6 +2,7 @@ import { Request, Response } from "express";
 
 import UserModel from "../models/User";
 import { generateToken } from "../utils/generateToken";
+import { Types } from "mongoose";
 
 // @desc    Get logged in user
 // @route   GET /api/v1/users/me
@@ -96,7 +97,7 @@ const deleteUser = async (req: Request, res: Response): Promise<void> => {
 // @desc    Follow a user
 // @route   PUT /api/v1/users/follow
 // @access  Private
-const followUser = async (req: Request, res: Response) => {
+const followUser = async (req: Request, res: Response): Promise<void> => {
   try {
     // We are following this user now - so we add this user to our following list
     const user = await UserModel.findByIdAndUpdate(
@@ -122,11 +123,45 @@ const followUser = async (req: Request, res: Response) => {
     if (error instanceof Error) {
       res.status(400).json({
         success: false,
-        message: "Something went wrong",
         error: error.message,
       });
     }
   }
 };
 
-export { getProfile, updateProfile, deleteUser, followUser };
+// @desc    Unfollow a user
+// @route   PUT /api/v1/users/unfollow
+// @access  Private
+const unfollowUser = async (req: Request, res: Response): Promise<void> => {
+  try {
+    // We are unfollowing this user now - so we remove this user from our following list
+    const user = await UserModel.findByIdAndUpdate(
+      req.body.unfollowId, // unfollowId is the id of the user we want to unfollow
+      {
+        // we are removing the user id from the following array
+        $pull: { followers: req.user?._id },
+      },
+      { new: true }
+    ).select("-password");
+
+    // This user is unfollowing us now - so we remove this user from our followers list
+    const me = await UserModel.findByIdAndUpdate(
+      req.user?._id,
+      {
+        $pull: { following: req.body.unfollowId },
+      },
+      { new: true }
+    ).select("-password");
+
+    res.status(200).json({ user, me });
+  } catch (error) {
+    if (error instanceof Error) {
+      res.status(400).json({
+        success: false,
+        error: error.message,
+      });
+    }
+  }
+};
+
+export { getProfile, updateProfile, deleteUser, followUser, unfollowUser };

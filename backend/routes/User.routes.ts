@@ -8,5 +8,6 @@ const router = Router();
 router.get("/profile", protect, UserController.getProfile);
 router.put("/update-profile", protect, UserController.updateProfile);
 router.put("/follow", protect, UserController.followUser);
+router.put("/unfollow", protect, UserController.unfollowUser);
 
 export default router;
