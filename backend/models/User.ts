@@ -1,5 +1,5 @@
 import { Schema, model } from "mongoose";
-import { IUser } from "../interfaces/userInterface";
+import { IUser, NotificationType } from "../interfaces/userInterface";
 
 const userSchema = new Schema<IUser>(
   {
@@ -38,6 +38,8 @@ const userSchema = new Schema<IUser>(
       default:
         "https://t4.ftcdn.net/jpg/03/32/59/65/240_F_332596535_lAdLhf6KzbW6PWXBWeIFTovTii1drkbT.jpg",
     },
+    notifications: Array<NotificationType>(),
+    seenNotifications: Array<NotificationType>(),
   },
   {
     timestamps: true,
