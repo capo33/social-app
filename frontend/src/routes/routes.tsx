@@ -5,10 +5,12 @@ import {
   createRoutesFromElements,
 } from "react-router-dom";
 import { ForgotPassword, Login, Register } from "../pages/auth/Index";
+import Home from "../pages/home/Index";
 
 const routes = createBrowserRouter(
   createRoutesFromElements(
     <Route path='/' element={<App />}>
+      <Route path='' element={<Home />} />
       <Route path='login' element={<Login />} />
       <Route path='register' element={<Register />} />
       <Route path='/forgot-password' element={<ForgotPassword />} />
