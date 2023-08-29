@@ -1,3 +1,9 @@
+export type NotificationType = {
+  _id?: string;
+  title: string;
+  description: string;
+  name: string;
+};
 export interface User {
   message: string;
   token: string;
@@ -5,9 +11,13 @@ export interface User {
   email: string;
   password: string;
   _id?: string;
-  avatar?: string;
+  image?: string;
   followers?: string[];
   following?: string[];
+  bio: string;
+  notifications?: NotificationType[];
+  seenNotifications?: NotificationType[];
+  createdAt?: Date;
 }
 
 export interface comments {
