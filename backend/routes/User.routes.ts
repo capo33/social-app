@@ -6,8 +6,10 @@ import { protect } from "../middlewares/authMiddleware";
 const router = Router();
 
 router.get("/profile", protect, UserController.getProfile);
+router.get("/get-all-notifications", protect, UserController.getNotifications);
 router.put("/update-profile", protect, UserController.updateProfile);
 router.put("/follow", protect, UserController.followUser);
 router.put("/unfollow", protect, UserController.unfollowUser);
+router.post("/notifications", protect, UserController.sendNotifications);
 
 export default router;

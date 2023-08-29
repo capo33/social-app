@@ -164,4 +164,110 @@ const unfollowUser = async (req: Request, res: Response): Promise<void> => {
   }
 };
 
-export { getProfile, updateProfile, deleteUser, followUser, unfollowUser };
+// @desc    Send notifications
+// @route   POST /api/v1/users/notifications
+// @access  Private
+const sendNotifications = async (
+  req: Request,
+  res: Response
+): Promise<void> => {
+  try {
+    const user = await UserModel.findById(req.body.userId);
+    if (!user) {
+      res.status(404);
+      throw new Error("User not found");
+    }
+    const notification = user.notifications;
+
+    notification.push({
+      title: "New follower",
+      description: `${user.username} started following you`,
+      name: user.username,
+      _id: user._id,
+    });
+
+    if (user.notifications.length > 1) {
+      res.status(400);
+      throw new Error("You have already sent a notification");
+    }
+    await UserModel.findByIdAndUpdate(
+      user?._id,
+      {
+        notifications: notification,
+      },
+      { new: true }
+    );
+
+    res.status(201).json({
+      success: true,
+      message: "Notification sent successfully",
+    });
+  } catch (error) {
+    if (error instanceof Error) {
+      res.status(400).json({
+        success: false,
+        error: error.message,
+      });
+    }
+  }
+};
+
+// @desc    Get all notifications
+// @route   GET /api/v1/users/get-all-notifications
+// @access  Private
+const getNotifications = async (req: Request, res: Response): Promise<void> => {
+  try {
+    const user = await UserModel.findById(req.user?._id);
+    if (!user) {
+      res.status(404);
+      throw new Error("User not found");
+    }
+
+    // We are getting the seen notifications and the notifications from the user
+    const seenNotifications = user.seenNotifications;
+
+    // We make a copy of the notifications array
+    const notifications = user.notifications;
+
+    // We aer pushing all the notifications to the seen notifications array
+    seenNotifications.push(...notifications);
+
+    // Update user with new notifications array and seen notifications array and save
+    // We are setting the notifications array to empty array because we have seen all the notifications and we dont want to see them again
+    user.notifications = [];
+
+    // now we are setting the seen notifications array to the notifications array because we have seen all the notifications and we dont want to see them again
+    user.seenNotifications = notifications;
+
+    // We are saving the user
+    const updatedUser = await user.save();
+
+    res.status(200).json({
+      success: true,
+      message: "All notifications marked as seen",
+      data: {
+        name: updatedUser.username,
+        email: updatedUser.email,
+        notifications: updatedUser.notifications,
+        seenNotifications: updatedUser.seenNotifications,
+      },
+    });
+  } catch (error) {
+    if (error instanceof Error) {
+      res.status(400).json({
+        success: false,
+        error: error.message,
+      });
+    }
+  }
+};
+
+export {
+  getProfile,
+  updateProfile,
+  deleteUser,
+  followUser,
+  unfollowUser,
+  sendNotifications,
+  getNotifications,
+};
