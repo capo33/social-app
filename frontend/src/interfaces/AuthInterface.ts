@@ -1,3 +1,5 @@
+import { NavigateFunction } from "react-router-dom";
+
 export type NotificationType = {
   _id?: string;
   title: string;
@@ -56,6 +58,6 @@ export interface AuthUser {
 
 export interface Auth {
   formData: AuthUser;
-  navigate: any;
+  navigate: NavigateFunction;
   toast?: any;
 }

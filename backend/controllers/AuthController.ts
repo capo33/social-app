@@ -66,7 +66,7 @@ const login = async (req: Request, res: Response) => {
     // Set cookies
     res.status(200).json({
       success: true,
-      message: "User logged in successfully",
+      message: `Welcome ${user.username}`,
       token: token,
       ...userWithoutPassword,
     });
