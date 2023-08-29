@@ -15,6 +15,9 @@ const userSchema = new Schema<IUser>(
       type: String,
       required: true,
     },
+    answer: {
+      type: String,
+    },
     followers: [
       {
         type: Schema.Types.ObjectId,

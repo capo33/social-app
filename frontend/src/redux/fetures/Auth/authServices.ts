@@ -1,11 +1,11 @@
 import axios from "axios";
 
 import { AUTH_URL } from "../../../constants/constants";
-import { AuthUser } from "../../../interfaces/AuthInterface";
+import { IAuthUser, IForgotPassword } from "../../../interfaces/AuthInterface";
 
 // *************************** Auth *************************** //
 // register
-const register = async (formData: AuthUser) => {
+const register = async (formData: IAuthUser) => {
   const response = await axios.post(`${AUTH_URL}/register`, formData);
 
   if (response.data) {
@@ -16,7 +16,7 @@ const register = async (formData: AuthUser) => {
 };
 
 // login
-const login = async (formData: AuthUser) => {
+const login = async (formData: IAuthUser) => {
   const response = await axios.post(`${AUTH_URL}/login`, formData);
   if (response.data) {
     localStorage.setItem("user", JSON.stringify(response.data));
@@ -29,10 +29,18 @@ const logout = () => {
   localStorage.removeItem("user");
 };
 
+// forgot password
+const forgotPassword = async (formData: IForgotPassword) => {
+  const response = await axios.post(`${AUTH_URL}/forgot-password`, formData);
+
+  return response.data;
+};
+
 const authServices = {
   register,
   login,
   logout,
+  forgotPassword,
 };
 
 export default authServices;

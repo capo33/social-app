@@ -1,12 +1,17 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 
 import authServices from "./authServices";
-import { Auth, User } from "../../../interfaces/AuthInterface";
+import {
+  IAuth,
+  IForgotPassword,
+  IUser,
+} from "../../../interfaces/AuthInterface";
+import { NavigateFunction } from "react-router-dom";
 
 const user = JSON.parse(localStorage.getItem("user") as string);
 
 interface AccountState {
-  user: User | null;
+  user: IUser | null;
   isError: boolean;
   isSuccess: boolean;
   isLoading: boolean;
@@ -25,7 +30,7 @@ const initialState: AccountState = {
 // register
 export const register = createAsyncThunk(
   "auth/register",
-  async ({ formData, toast, navigate }: Auth, { rejectWithValue }) => {
+  async ({ formData, toast, navigate }: IAuth, { rejectWithValue }) => {
     try {
       const response = await authServices.register(formData);
       navigate("/");
@@ -50,7 +55,7 @@ export const register = createAsyncThunk(
 // login
 export const login = createAsyncThunk(
   "auth/login",
-  async ({ formData, toast, navigate }: Auth, { rejectWithValue }) => {
+  async ({ formData, toast, navigate }: IAuth, { rejectWithValue }) => {
     try {
       const response = await authServices.login(formData);
       navigate("/");
@@ -74,7 +79,37 @@ export const logout = createAsyncThunk("auth/logout", async () => {
   authServices.logout();
 });
 
- 
+interface IResetPassword {
+  toast: any;
+  formData: IForgotPassword;
+  navigate: NavigateFunction;
+}
+
+// forgot password
+export const forgotPassword = createAsyncThunk(
+  "auth/forgotPassword",
+  async (
+    { formData, toast, navigate }: IResetPassword,
+    { rejectWithValue }
+  ) => {
+    try {
+      const response = await authServices.forgotPassword(formData);
+      toast.success(response?.message);
+      navigate("/login");
+      return response;
+    } catch (error: unknown | any) {
+      const message =
+        (error.response &&
+          error.response.data &&
+          error.response.data.message) ||
+        error.message ||
+        error.toString();
+      toast.error(error.response?.data?.msg);
+      return rejectWithValue(message);
+    }
+  }
+);
+
 const authSlice = createSlice({
   name: "auth",
   initialState,
@@ -101,6 +136,8 @@ const authSlice = createSlice({
       state.isError = true;
       state.message = action.payload as string;
     });
+
+    // Login a user
     builder.addCase(login.pending, (state) => {
       state.isLoading = true;
     });
@@ -114,6 +151,8 @@ const authSlice = createSlice({
       state.isError = true;
       state.message = payload as string;
     });
+
+    // Logout a user
     builder.addCase(logout.pending, (state) => {
       state.isLoading = true;
     });
@@ -126,6 +165,23 @@ const authSlice = createSlice({
       state.isLoading = false;
       state.isError = true;
       state.message = payload as string;
+    });
+
+    // Forgot password
+    builder.addCase(forgotPassword.pending, (state) => {
+      state.isLoading = true;
+    });
+    builder.addCase(forgotPassword.fulfilled, (state, action) => {
+      state.isError = false;
+      state.isSuccess = true;
+      state.isLoading = false;
+      state.user = action.payload;
+    });
+    builder.addCase(forgotPassword.rejected, (state, action) => {
+      state.isError = true;
+      state.isSuccess = false;
+      state.isLoading = false;
+      state.message = action.payload as string;
     });
   },
 });

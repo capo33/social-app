@@ -17,30 +17,23 @@ import {
 
 // Icons
 import Visibility from "@mui/icons-material/Visibility";
+import PasswordIcon from "@mui/icons-material/Password";
 import VisibilityOff from "@mui/icons-material/VisibilityOff";
-import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 
-import { IAuthUser } from "../../interfaces/AuthInterface";
-import { login } from "../../redux/fetures/Auth/authSlice";
-import { useAppDispatch, useAppSelector } from "../../redux/app/store";
+import { useAppDispatch } from "../../redux/app/store";
+import { IForgotPassword } from "../../interfaces/AuthInterface";
+import { forgotPassword } from "../../redux/fetures/Auth/authSlice";
 
-export default function Login() {
+export default function ForgotPassword() {
   const [showPassword, setShowPassword] = React.useState(false);
-  const [formData, setFormData] = React.useState<IAuthUser>({
+  const [formData, setFormData] = React.useState<IForgotPassword>({
     email: "",
-    password: "",
+    answer: "",
+    newPassword: "",
   });
-
-  const { user } = useAppSelector((state) => state.auth);
 
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
-
-  React.useEffect(() => {
-    if (user) {
-      navigate("/");
-    }
-  }, [user, navigate]);
 
   const handleClickShowPassword = () => setShowPassword((show) => !show);
   const handleMouseDownPassword = (
@@ -54,13 +47,22 @@ export default function Login() {
     setFormData({ ...formData, [name]: value });
   };
 
+  const resetForm = () => {
+    setFormData({
+      email: "",
+      answer: "",
+      newPassword: "",
+    });
+  };
+
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    dispatch(login({ formData, toast, navigate }));
+    dispatch(forgotPassword({ formData, toast, navigate }));
+    resetForm();
   };
 
   return (
-    <Container maxWidth='md'>
+    <Container maxWidth='sm'>
       <CssBaseline />
       <Box
         sx={{
@@ -71,10 +73,13 @@ export default function Login() {
         }}
       >
         <Avatar sx={{ m: 1, bgcolor: "secondary.main" }}>
-          <LockOutlinedIcon />
+          <PasswordIcon />
         </Avatar>
         <Typography component='h1' variant='h5'>
-          Sign in
+          No Worries! We got you!
+        </Typography>
+        <Typography component='p' variant='h6'>
+          Do you remember your security answer? 😉
         </Typography>
         <Box component='form' onSubmit={handleSubmit} noValidate sx={{ mt: 1 }}>
           <TextField
@@ -93,13 +98,24 @@ export default function Login() {
             margin='normal'
             required
             fullWidth
-            name='password'
-            label='Password'
+            id='answer'
+            label='Security Answer'
+            name='answer'
+            autoComplete='answer'
+            onChange={handleChange}
+            value={formData.answer}
+          />
+          <TextField
+            margin='normal'
+            required
+            fullWidth
+            name='newPassword'
+            label='New Password'
             type={showPassword ? "text" : "password"}
-            id='password'
+            id='newPassword'
             autoComplete='current-password'
             onChange={handleChange}
-            value={formData.password}
+            value={formData.newPassword}
             InputProps={{
               endAdornment: (
                 <InputAdornment position='end'>
@@ -114,7 +130,6 @@ export default function Login() {
                 </InputAdornment>
               ),
             }}
-            autoFocus
           />
 
           <Button
@@ -123,14 +138,11 @@ export default function Login() {
             variant='contained'
             sx={{ mt: 3, mb: 2, backgroundColor: "cadetblue" }}
           >
-            Sign In
+            Reset Password
           </Button>
           <Grid container>
             <Grid item xs>
-              <Link to='/forgot-password'>Forgot password?</Link>
-            </Grid>
-            <Grid item>
-              <Link to='/register'>{"Don't have an account? Sign Up"}</Link>
+              <Link to='/login'>Remembered your password?</Link>
             </Grid>
           </Grid>
         </Box>

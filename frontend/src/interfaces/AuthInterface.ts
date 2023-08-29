@@ -6,7 +6,7 @@ export type NotificationType = {
   description: string;
   name: string;
 };
-export interface User {
+export interface IUser {
   message: string;
   token: string;
   name: string;
@@ -22,7 +22,7 @@ export interface User {
   createdAt?: Date;
 }
 
-export interface comments {
+export interface Icomments {
   comment: string;
   postedBy?: {
     name: string;
@@ -31,13 +31,13 @@ export interface comments {
   _id?: string;
 }
 
-export interface Post {
+export interface IPost {
   _id: string;
   title: string;
   description: string;
   image: string;
   likes: string[];
-  comments: comments[];
+  comments: Icomments[];
 
   postedBy?: {
     name: string;
@@ -46,18 +46,24 @@ export interface Post {
 }
 
 export interface userProfileData {
-  user?: User;
-  posts?: Post[];
+  user?: IUser;
+  posts?: IPost[];
 }
 
-export interface AuthUser {
+export interface IAuthUser {
   email: string;
   password: string;
-  name?: string;
+  username?: string;
 }
 
-export interface Auth {
-  formData: AuthUser;
+export interface IAuth {
+  formData: IAuthUser;
   navigate: NavigateFunction;
   toast?: any;
+}
+
+export interface IForgotPassword {
+  email: string;
+  answer: string;
+  newPassword: string;
 }

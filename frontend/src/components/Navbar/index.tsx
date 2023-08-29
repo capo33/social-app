@@ -185,10 +185,10 @@ export default function Header() {
 
   return (
     <Box sx={{ flexGrow: 1 }}>
-      <AppBar position='static'>
+      <AppBar position='static' sx={{backgroundColor:"cadetblue"}}>
         <Container maxWidth='xl'>
           <Toolbar>
-            <Typography variant='h6' noWrap component='div'>
+            <Typography variant='h6' noWrap component='div' color={'black'}>
               Social Network
             </Typography>
 
@@ -222,7 +222,7 @@ export default function Header() {
                   <Link to={"/login"}>
                     <MenuItem onClick={handleClose}>
                       <ListItemIcon>
-                        <LoginIcon sx={{ color: "white" }} />
+                        <LoginIcon  />
                       </ListItemIcon>
                       Login
                     </MenuItem>
@@ -230,7 +230,7 @@ export default function Header() {
                   <Link to={"/register"}>
                     <MenuItem onClick={handleClose}>
                       <ListItemIcon>
-                        <PersonAddAltIcon sx={{ color: "white" }} />
+                        <PersonAddAltIcon  />
                       </ListItemIcon>
                       Register
                     </MenuItem>

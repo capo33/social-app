@@ -11,6 +11,7 @@ export interface IUser extends Document {
   username: string;
   email: string;
   password: string;
+  answer: string;
   followers: Types.ObjectId[];
   following: Types.ObjectId[];
   bio: string;
