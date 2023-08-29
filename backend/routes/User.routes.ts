@@ -11,5 +11,10 @@ router.put("/update-profile", protect, UserController.updateProfile);
 router.put("/follow", protect, UserController.followUser);
 router.put("/unfollow", protect, UserController.unfollowUser);
 router.post("/notifications", protect, UserController.sendNotifications);
+router.delete(
+  "/delete-all-notifications",
+  protect,
+  UserController.deleteNotification
+);
 
 export default router;

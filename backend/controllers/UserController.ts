@@ -262,6 +262,44 @@ const getNotifications = async (req: Request, res: Response): Promise<void> => {
   }
 };
 
+// @desc    Delete notification
+// @route   DELETE /api/v1/users/notifications/:id
+// @access  Private
+const deleteNotification = async (
+  req: Request,
+  res: Response
+): Promise<void> => {
+  try {
+    const user = await UserModel.findById(req.user?._id);
+    if (!user) {
+      res.status(404);
+      throw new Error("User not found");
+    }
+    user.notifications = [];
+    user.seenNotifications = [];
+
+    const updatedUser = await user.save();
+
+    res.status(200).json({
+      success: true,
+      message: "Notification deleted",
+      data: {
+        name: updatedUser.username,
+        email: updatedUser.email,
+        notifications: updatedUser.notifications,
+        seenNotifications: updatedUser.seenNotifications,
+      },
+    });
+  } catch (error) {
+    if (error instanceof Error) {
+      res.status(400).json({
+        success: false,
+        error: error.message,
+      });
+    }
+  }
+};
+
 export {
   getProfile,
   updateProfile,
@@ -270,4 +308,5 @@ export {
   unfollowUser,
   sendNotifications,
   getNotifications,
+  deleteNotification,
 };
