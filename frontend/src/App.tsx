@@ -1,22 +1,23 @@
 import { Outlet } from "react-router-dom";
 import { Toaster } from "react-hot-toast";
-import Container from "@mui/material/Container";
+import { Container, Box } from "@mui/material";
+
 
 import Header from "./components/Navbar";
-
-import "./App.css";
+import Sidebar from "./components/Sidebar/Index";
+import { useAppSelector } from "./redux/app/store";
 
 function App() {
+  const { user } = useAppSelector((state) => state.auth);
+
   return (
-    <>
-      <Header />
+    <Box>
+      {user ? <Sidebar /> : <Header />}
       <Toaster />
-      <main className='py-3'>
-        <Container maxWidth='xl'>
-          <Outlet />
-        </Container>
-      </main>
-    </>
+      <Container maxWidth='md' sx={{ marginBottom: "5rem" }}>
+        <Outlet />
+      </Container>
+    </Box>
   );
 }
 

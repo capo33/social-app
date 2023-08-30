@@ -12,6 +12,7 @@ import Container from "@mui/material/Container";
 import IconButton from "@mui/material/IconButton";
 import Typography from "@mui/material/Typography";
 import ListItemIcon from "@mui/material/ListItemIcon";
+import { ThemeProvider, createTheme } from "@mui/material/styles";
 
 // Icons
 import LoginIcon from "@mui/icons-material/Login";
@@ -24,6 +25,15 @@ import NotificationsIcon from "@mui/icons-material/Notifications";
 
 import { logout } from "../../redux/fetures/Auth/authSlice";
 import { useAppSelector, useAppDispatch } from "../../redux/app/store";
+
+const darkTheme = createTheme({
+  palette: {
+    mode: "light",
+    primary: {
+      main: "#246643",
+    },
+  },
+});
 
 export default function Header() {
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
@@ -44,7 +54,7 @@ export default function Header() {
 
   const handleLogout = () => {
     dispatch(logout());
-    navigate("/");
+    navigate("/login");
   };
 
   const handleProfileMenuOpen = (event: React.MouseEvent<HTMLElement>) => {
@@ -99,12 +109,14 @@ export default function Header() {
         transformOrigin={{ horizontal: "right", vertical: "top" }}
         anchorOrigin={{ horizontal: "right", vertical: "bottom" }}
       >
-        <MenuItem onClick={handleClose}>
-          <ListItemIcon>
-            <PersonIcon />
-          </ListItemIcon>
-          Profile
-        </MenuItem>
+        <Link to='/profile'>
+          <MenuItem onClick={handleClose}>
+            <ListItemIcon>
+              <PersonIcon />
+            </ListItemIcon>
+            Profile
+          </MenuItem>
+        </Link>
         <Divider />
 
         <MenuItem onClick={handleLogout}>
@@ -121,28 +133,52 @@ export default function Header() {
   const renderMobileMenu = (
     <Menu
       anchorEl={mobileMoreAnchorEl}
-      anchorOrigin={{
-        vertical: "top",
-        horizontal: "right",
-      }}
       id={mobileMenuId}
       keepMounted
-      transformOrigin={{
-        vertical: "top",
-        horizontal: "right",
-      }}
       open={isMobileMenuOpen}
       onClose={handleMobileMenuClose}
       onClick={handleMobileMenuClose}
+      slotProps={{
+        paper: {
+          elevation: 0,
+          sx: {
+            overflow: "visible",
+            filter: "drop-shadow(0px 2px 8px rgba(0,0,0,0.32))",
+            mt: 1.5,
+            "& .MuiAvatar-root": {
+              width: 32,
+              height: 32,
+              ml: -0.5,
+              mr: 1,
+            },
+            "&:before": {
+              content: '""',
+              display: "block",
+              position: "absolute",
+              top: 0,
+              right: 14,
+              width: 10,
+              height: 10,
+              bgcolor: "background.paper",
+              transform: "translateY(-50%) rotate(45deg)",
+              zIndex: 0,
+            },
+          },
+        },
+      }}
+      transformOrigin={{ horizontal: "right", vertical: "top" }}
+      anchorOrigin={{ horizontal: "right", vertical: "bottom" }}
     >
       {user ? (
-        <>
-          <MenuItem onClick={handleClose}>
-            <ListItemIcon>
-              <PersonIcon />
-            </ListItemIcon>
-            Profile
-          </MenuItem>
+        <Box component={"div"}>
+          <Link to='/profile'>
+            <MenuItem onClick={handleClose}>
+              <ListItemIcon>
+                <PersonIcon />
+              </ListItemIcon>
+              Profile
+            </MenuItem>
+          </Link>
 
           <MenuItem onClick={handleClose}>
             <ListItemIcon>
@@ -159,11 +195,11 @@ export default function Header() {
             </ListItemIcon>
             Logout
           </MenuItem>
-        </>
+        </Box>
       ) : (
-        <>
+        <Box component={"div"}>
           <Link to={"/login"} onClick={handleClose}>
-            <MenuItem sx={{ color: "black" }}>
+            <MenuItem>
               <ListItemIcon>
                 <LoginIcon />
               </ListItemIcon>
@@ -171,90 +207,92 @@ export default function Header() {
             </MenuItem>
           </Link>
           <Link to={"/register"} onClick={handleClose}>
-            <MenuItem sx={{ color: "black" }}>
+            <MenuItem>
               <ListItemIcon>
                 <PersonAddAltIcon />
               </ListItemIcon>
               Register
             </MenuItem>
           </Link>
-        </>
+        </Box>
       )}
     </Menu>
   );
 
   return (
-    <Box sx={{ flexGrow: 1 }}>
-      <AppBar position='static' sx={{backgroundColor:"cadetblue"}}>
-        <Container maxWidth='xl'>
-          <Toolbar>
-            <Typography variant='h6' noWrap component='div' color={'black'}>
-              Social Network
-            </Typography>
+    <ThemeProvider theme={darkTheme}>
+      <Box sx={{ flexGrow: 1 }}>
+        <AppBar position='static'>
+          <Container maxWidth='xl'>
+            <Toolbar>
+              <Typography variant='h6' noWrap component='div'>
+                Social Network
+              </Typography>
 
-            <Box sx={{ flexGrow: 1 }} />
-            <Box sx={{ display: { xs: "none", md: "flex" } }}>
-              {user ? (
-                <>
-                  <IconButton
-                    size='large'
-                    aria-label='show 17 new notifications'
-                    color='inherit'
-                  >
-                    <Badge badgeContent={17} color='error'>
-                      <NotificationsIcon />
-                    </Badge>
-                  </IconButton>
-                  <IconButton
-                    size='large'
-                    edge='end'
-                    aria-label='account of current user'
-                    aria-controls={menuId}
-                    aria-haspopup='true'
-                    onClick={handleProfileMenuOpen}
-                    color='inherit'
-                  >
-                    <AccountCircle />
-                  </IconButton>
-                </>
-              ) : (
-                <>
-                  <Link to={"/login"}>
-                    <MenuItem onClick={handleClose}>
-                      <ListItemIcon>
-                        <LoginIcon  />
-                      </ListItemIcon>
-                      Login
-                    </MenuItem>
-                  </Link>
-                  <Link to={"/register"}>
-                    <MenuItem onClick={handleClose}>
-                      <ListItemIcon>
-                        <PersonAddAltIcon  />
-                      </ListItemIcon>
-                      Register
-                    </MenuItem>
-                  </Link>
-                </>
-              )}
-            </Box>
-            <Box sx={{ display: { xs: "flex", md: "none" } }}>
-              <IconButton
-                size='large'
-                aria-label='show more'
-                aria-controls={mobileMenuId}
-                aria-haspopup='true'
-                onClick={handleMobileMenuOpen}
-                color='inherit'
-              >
-                <MoreIcon />
-              </IconButton>
-            </Box>
-          </Toolbar>
-        </Container>
-      </AppBar>
-      {renderMobileMenu}
-      {renderMenu}
-    </Box>
+              <Box sx={{ flexGrow: 1 }} />
+              <Box sx={{ display: { xs: "none", md: "flex" } }}>
+                {user ? (
+                  <>
+                    <IconButton
+                      size='large'
+                      aria-label='show 17 new notifications'
+                      color='inherit'
+                    >
+                      <Badge badgeContent={17} color='error'>
+                        <NotificationsIcon />
+                      </Badge>
+                    </IconButton>
+                    <IconButton
+                      size='large'
+                      edge='end'
+                      aria-label='account of current user'
+                      aria-controls={menuId}
+                      aria-haspopup='true'
+                      onClick={handleProfileMenuOpen}
+                      color='inherit'
+                    >
+                      <AccountCircle sx={{ fontSize: 30 }} />
+                    </IconButton>
+                  </>
+                ) : (
+                  <>
+                    <Link to={"/login"}>
+                      <MenuItem onClick={handleClose}>
+                        <ListItemIcon>
+                          <LoginIcon />
+                        </ListItemIcon>
+                        Login
+                      </MenuItem>
+                    </Link>
+                    <Link to={"/register"}>
+                      <MenuItem onClick={handleClose}>
+                        <ListItemIcon>
+                          <PersonAddAltIcon />
+                        </ListItemIcon>
+                        Register
+                      </MenuItem>
+                    </Link>
+                  </>
+                )}
+              </Box>
+              <Box sx={{ display: { xs: "flex", md: "none" } }}>
+                <IconButton
+                  size='large'
+                  aria-label='show more'
+                  aria-controls={mobileMenuId}
+                  aria-haspopup='true'
+                  onClick={handleMobileMenuOpen}
+                  color='inherit'
+                >
+                  <MoreIcon />
+                </IconButton>
+              </Box>
+            </Toolbar>
+          </Container>
+        </AppBar>
+        {renderMobileMenu}
+        {renderMenu}
+      </Box>
+    </ThemeProvider>
   );
 }

@@ -6,6 +6,7 @@ import {
 } from "react-router-dom";
 import { ForgotPassword, Login, Register } from "../pages/auth/Index";
 import Home from "../pages/home/Index";
+import Profile from "../pages/User/Index";
 
 const routes = createBrowserRouter(
   createRoutesFromElements(
@@ -14,6 +15,7 @@ const routes = createBrowserRouter(
       <Route path='login' element={<Login />} />
       <Route path='register' element={<Register />} />
       <Route path='/forgot-password' element={<ForgotPassword />} />
+      <Route path='/profile' element={<Profile />} />
 
     </Route>
   )
