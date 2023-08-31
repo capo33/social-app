@@ -1,7 +1,6 @@
 import { Outlet } from "react-router-dom";
 import { Toaster } from "react-hot-toast";
-import { Container, Box } from "@mui/material";
-
+import { Box, Grid } from "@mui/material";
 
 import Header from "./components/Navbar";
 import Sidebar from "./components/Sidebar/Index";
@@ -12,11 +11,16 @@ function App() {
 
   return (
     <Box>
-      {user ? <Sidebar /> : <Header />}
-      <Toaster />
-      <Container maxWidth='md' sx={{ marginBottom: "5rem" }}>
-        <Outlet />
-      </Container>
+      {!user && <Header />}
+      <Grid container>
+        <Grid item md={2}>
+          {user && <Sidebar />}
+          <Toaster />
+        </Grid>
+        <Grid item md={10}>
+          <Outlet />
+        </Grid>
+      </Grid>
     </Box>
   );
 }

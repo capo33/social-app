@@ -19,6 +19,7 @@ import MenuIcon from "@mui/icons-material/Menu";
 import LogoutIcon from "@mui/icons-material/Logout";
 import BookmarkIcon from "@mui/icons-material/Bookmark";
 import NotificationsIcon from "@mui/icons-material/Notifications";
+import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
 
 import { logout } from "../../redux/fetures/Auth/authSlice";
 import { useAppSelector, useAppDispatch } from "../../redux/app/store";
@@ -65,6 +66,11 @@ export default function ResponsiveDrawer(props: Props) {
       path: "/saved",
     },
     {
+      label: "Create Post",
+      icon: <AddCircleOutlineIcon sx={{ fontSize: 30 }} />,
+      path: "/create-post",
+    },
+    {
       label: "Profile",
       icon: <Avatar sx={{ width: 30, height: 30 }} />,
       path: "/profile",
@@ -90,28 +96,35 @@ export default function ResponsiveDrawer(props: Props) {
         </Typography>
       </Toolbar>
 
-      <List>
-        {user &&
-          NavLinks.map((link) => (
-            <ListItem
-              key={link.label}
-              onClick={link.onClick}
-              sx={{ my: 2, display: "flex" }}
-            >
-              <ListItemIcon>{link.icon}</ListItemIcon>
+      {user &&
+        NavLinks.map((link) => (
+          <List
+            sx={{
+              ":hover": {
+                backgroundColor: "#f5f5f5",
+                transition: "background-color 300ms cubic-bezier(0.4,0,0.2,1)",
+                borderRadius: "10px",
+                cursor: "pointer",
+                display: "block",
+              },
+            }}
+            key={link.label}
+            onClick={link.onClick}
+          >
               <Link to={link.path}>
+            <ListItem>
+              <ListItemIcon>{link.icon}</ListItemIcon>
                 <ListItemText
                   primary={link.label}
                   sx={{
-                    my: 2,
                     display: "flex",
                     justifyContent: "space-between",
                   }}
                 />
-              </Link>
             </ListItem>
-          ))}
-      </List>
+              </Link>
+          </List>
+        ))}
     </Box>
   );
 
