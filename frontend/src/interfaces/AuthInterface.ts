@@ -6,10 +6,11 @@ export type NotificationType = {
   description: string;
   name: string;
 };
+
 export interface IUser {
   message: string;
   token: string;
-  name: string;
+  username: string;
   email: string;
   password: string;
   _id?: string;
@@ -20,34 +21,6 @@ export interface IUser {
   notifications?: NotificationType[];
   seenNotifications?: NotificationType[];
   createdAt?: Date;
-}
-
-export interface Icomments {
-  comment: string;
-  postedBy?: {
-    name: string;
-    _id: string;
-  };
-  _id?: string;
-}
-
-export interface IPost {
-  _id: string;
-  title: string;
-  description: string;
-  image: string;
-  likes: string[];
-  comments: Icomments[];
-
-  postedBy?: {
-    name: string;
-    _id?: string;
-  };
-}
-
-export interface userProfileData {
-  user?: IUser;
-  posts?: IPost[];
 }
 
 export interface IAuthUser {

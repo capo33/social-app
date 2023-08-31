@@ -1,7 +1,6 @@
 import { Request, Response } from "express";
 
 import PostModel from "../models/Post";
-import { Types } from "mongoose";
 
 // @desc    Get all posts
 // @route   GET /api/v1/posts
@@ -9,8 +8,8 @@ import { Types } from "mongoose";
 const getPosts = async (req: Request, res: Response): Promise<void> => {
   try {
     const posts = await PostModel.find({})
-      .populate("postedBy", "_id name")
-      .populate("comments.postedBy", "_id name")
+      .populate("postedBy", "_id username")
+      .populate("comments.postedBy", "_id username")
       .sort({ date: -1 });
 
     res.status(200).json(posts);
@@ -59,9 +58,6 @@ const createPost = async (req: Request, res: Response): Promise<void> => {
       res.status(422);
       throw new Error("Please add all the fields");
     }
-
-    // Hide password from user object
-    req.body.postedBy = req.user?._id;
 
     const post = await PostModel.create({
       title,
@@ -174,7 +170,7 @@ const commentPost = async (req: Request, res: Response): Promise<void> => {
         $push: {
           comments: comment,
         },
-      },  
+      },
       {
         new: true,
       }

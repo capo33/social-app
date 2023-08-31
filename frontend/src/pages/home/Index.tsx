@@ -1,3 +1,7 @@
+import React, { useEffect, useState } from "react";
+import { toast } from "react-hot-toast";
+import { Link } from "react-router-dom";
+
 // Material UI
 import {
   Card,
@@ -21,9 +25,27 @@ import MoreVertIcon from "@mui/icons-material/MoreVert";
 import FavoriteIcon from "@mui/icons-material/Favorite";
 import BookmarkBorderIcon from "@mui/icons-material/BookmarkBorder";
 
+import { createPost, getAllPosts } from "../../redux/fetures/Post/postSlice";
+import { useAppDispatch, useAppSelector } from "../../redux/app/store";
+
+
 const cards = [1, 2, 3, 4, 5, 6, 7, 8, 9];
 
 export default function Home() {
+  const { posts } = useAppSelector((state) => state.posts);
+  const { user } = useAppSelector((state) => state.auth);
+console.log(posts);
+
+  const [comment, setComment] = useState("");
+  const [show, setShow] = useState(false);
+
+  const dispatch = useAppDispatch();
+  const token = user?.token;
+
+  useEffect(() => {
+    dispatch(getAllPosts());
+  }, [dispatch]);
+
   return (
     <Container maxWidth='lg'>
       <Box>
@@ -39,10 +61,10 @@ export default function Home() {
         </Typography>
       </Box>
       <Grid container spacing={4}>
-        {cards.map((card) => (
+        {posts && posts?.map((post) => (
           <Grid
             item
-            key={card}
+            key={post?._id}
             xs={12}
             sm={6}
             md={7}
@@ -54,7 +76,7 @@ export default function Home() {
               <CardHeader
                 avatar={
                   <Avatar sx={{ bgcolor: red[500] }} aria-label='recipe'>
-                    R
+                    {post?.postedBy?.image}
                   </Avatar>
                 }
                 action={
@@ -62,19 +84,19 @@ export default function Home() {
                     <MoreVertIcon />
                   </IconButton>
                 }
-                title='Shrimp and Chorizo Paella'
+                title={post?.postedBy?.username}
                 subheader='September 14, 2016'
               />
 
               <CardMedia
                 component='img'
                 height='194'
-                image='https://source.unsplash.com/random?wallpapers'
-                alt='Paella dish'
+                image={post?.image}
+                alt={post?.title}
               />
               <CardContent>
                 <Typography variant='body2' color='text.secondary'>
-                  This impressive
+                  {post?.description}
                 </Typography>
               </CardContent>
               <Stack
