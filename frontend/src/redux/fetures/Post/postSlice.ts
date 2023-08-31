@@ -85,20 +85,21 @@ export const createPost = createAsyncThunk(
       formData,
       token,
       toast,
-      navigate,
     }: {
       formData: IPostCreate;
       token: string;
-      navigate: NavigateFunction;
       toast: any;
     },
     { rejectWithValue }
   ) => {
     try {
       const response = await postServices.createPost(formData, token);
-      toast.success(response.data.message);
+      toast.success(response.message);
       return response;
     } catch (error: unknown | any) {
+      toast.error(error.response.data.message);
+      console.log(error.response.data.message);
+
       const message =
         (error.response &&
           error.response.data &&
