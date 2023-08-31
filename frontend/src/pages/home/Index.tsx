@@ -33,7 +33,7 @@ export default function Home() {
           align='center'
           color='text.primary'
           gutterBottom
-          sx={{fontFamily: 'monospace'}}
+          sx={{ fontFamily: "monospace", color: "blue" }}
         >
           Social Network
         </Typography>

@@ -78,7 +78,7 @@ export default function ResponsiveDrawer(props: Props) {
   ];
 
   const drawer = (
-    <div>
+    <Box component='div'>
       <Toolbar>
         <Typography
           variant='h6'
@@ -112,7 +112,7 @@ export default function ResponsiveDrawer(props: Props) {
             </ListItem>
           ))}
       </List>
-    </div>
+    </Box>
   );
 
   const container =

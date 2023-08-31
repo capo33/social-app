@@ -30,7 +30,7 @@ const darkTheme = createTheme({
   palette: {
     mode: "light",
     primary: {
-      main: "#246643",
+      main: "#fefefe",
     },
   },
 });
