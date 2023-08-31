@@ -17,8 +17,7 @@ const getPosts = async (req: Request, res: Response): Promise<void> => {
     if (error instanceof Error)
       res.status(400).json({
         success: false,
-        message: "Something went wrong",
-        error: error.message,
+        message: error.message,
       });
   }
 };
@@ -41,8 +40,7 @@ const getPost = async (req: Request, res: Response): Promise<void> => {
     if (error instanceof Error)
       res.status(400).json({
         success: false,
-        message: "Something went wrong",
-        error: error.message,
+        message: error.message,
       });
   }
 };
@@ -75,8 +73,7 @@ const createPost = async (req: Request, res: Response): Promise<void> => {
     if (error instanceof Error)
       res.status(400).json({
         success: false,
-        message: "Something went wrong",
-        error: error.message,
+        message: error.message,
       });
   }
 };
@@ -99,8 +96,7 @@ const getMyPosts = async (req: Request, res: Response): Promise<void> => {
     if (error instanceof Error)
       res.status(400).json({
         success: false,
-        message: "Something went wrong",
-        error: error.message,
+        message: error.message,
       });
   }
 };
@@ -123,8 +119,7 @@ const likePost = async (req: Request, res: Response): Promise<void> => {
     if (error instanceof Error)
       res.status(400).json({
         success: false,
-        message: "Something went wrong",
-        error: error.message,
+        message: error.message,
       });
   }
 };
@@ -148,8 +143,7 @@ const unlikePost = async (req: Request, res: Response): Promise<void> => {
     if (error instanceof Error)
       res.status(400).json({
         success: false,
-        message: "Something went wrong",
-        error: error.message,
+        message: error.message,
       });
   }
 };
@@ -183,8 +177,7 @@ const commentPost = async (req: Request, res: Response): Promise<void> => {
     if (error instanceof Error)
       res.status(400).json({
         success: false,
-        message: "Something went wrong",
-        error: error.message,
+        message: error.message,
       });
   }
 };
@@ -213,8 +206,7 @@ const deleteComment = async (req: Request, res: Response): Promise<void> => {
     if (error instanceof Error)
       res.status(400).json({
         success: false,
-        message: "Something went wrong",
-        error: error.message,
+        message: error.message,
       });
   }
 };

@@ -1,4 +1,8 @@
 import React, { useState } from "react";
+import { toast } from "react-hot-toast";
+import { useNavigate } from "react-router-dom";
+import axios from "axios";
+// Material UI
 import {
   TextField,
   Button,
@@ -6,16 +10,16 @@ import {
   Stack,
   Typography,
   Box,
+  IconButton,
 } from "@mui/material";
-import { toast } from "react-hot-toast";
-import { useNavigate } from "react-router-dom";
+
+// Material UI Icons
+import PhotoCamera from "@mui/icons-material/PhotoCamera";
+import HighlightOffIcon from "@mui/icons-material/HighlightOff";
 
 import { IPostCreate } from "../../interfaces/PostInterface";
-import { useAppDispatch, useAppSelector } from "../../redux/app/store";
-import IconButton from "@mui/material/IconButton";
-import PhotoCamera from "@mui/icons-material/PhotoCamera";
-import axios from "axios";
 import { createPost } from "../../redux/fetures/Post/postSlice";
+import { useAppDispatch, useAppSelector } from "../../redux/app/store";
 
 const AddPost = () => {
   const { user } = useAppSelector((state) => state.auth);
@@ -31,6 +35,7 @@ const AddPost = () => {
 
   const token = user?.token as string;
 
+  // Upload image to cloudinary
   const uploadImage = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.currentTarget.files?.[0];
     if (!file) return;
@@ -44,6 +49,7 @@ const AddPost = () => {
     setFormData({ ...formData, image: response.data.url });
   };
 
+  // Submit form
   const handleSubmit = async (e: React.FocusEvent<HTMLFormElement>) => {
     e.preventDefault();
 
@@ -63,7 +69,7 @@ const AddPost = () => {
     });
   };
 
-  // Delete image from cloudinary
+  // Delete image
   const deleteImage = () => {
     setFormData({ ...formData, image: "" });
   };
@@ -78,7 +84,7 @@ const AddPost = () => {
           <TextField
             type='text'
             variant='outlined'
-            color='success'
+            color='primary'
             label='Title'
             onChange={(e) =>
               setFormData({ ...formData, title: e.target.value })
@@ -91,7 +97,7 @@ const AddPost = () => {
         <TextField
           type='text'
           variant='outlined'
-          color='secondary'
+          color='primary'
           label='Description'
           onChange={(e) =>
             setFormData({ ...formData, description: e.target.value })
@@ -106,7 +112,7 @@ const AddPost = () => {
         <TextField
           type='text'
           variant='outlined'
-          color='secondary'
+          color='primary'
           label='Tags'
           onChange={(e) =>
             setFormData({ ...formData, tags: e.target.value.split(",") })
@@ -135,21 +141,28 @@ const AddPost = () => {
             </IconButton>
           </Button>
         </Stack>
-        <Button component='label' onClick={deleteImage}>
-          Delete Image
-        </Button>
         {formData.image && (
-          <img
-            src={formData.image}
-            alt={formData.title}
-            style={{
-              width: "50%",
-              height: "50%",
-              objectFit: "cover",
-              margin: "5px auto",
-              display: "block",
+          <Box
+            sx={{
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
             }}
-          />
+          >
+            <img
+              src={formData.image}
+              alt={formData.title}
+              style={{
+                width: "50%",
+                height: "50%",
+                objectFit: "cover",
+                margin: "5px auto",
+              }}
+            />
+            <Button component='label' onClick={deleteImage}>
+              <HighlightOffIcon style={{ color: "gray", fontSize: "40px" }} />
+            </Button>
+          </Box>
         )}
         <Button
           type='submit'
