@@ -2,9 +2,8 @@ import { Outlet } from "react-router-dom";
 import { Toaster } from "react-hot-toast";
 import { Box, Grid } from "@mui/material";
 
-import Header from "./components/Navbar";
-import Sidebar from "./components/Sidebar/Index";
 import { useAppSelector } from "./redux/app/store";
+import { Header, Sidebar } from "./components/Index";
 
 function App() {
   const { user } = useAppSelector((state) => state.auth);
@@ -13,11 +12,11 @@ function App() {
     <Box>
       {!user && <Header />}
       <Grid container>
-        <Grid item md={2}>
+        <Grid item md={2} >
           {user && <Sidebar />}
           <Toaster />
         </Grid>
-        <Grid item md={10}>
+        <Grid item md={8}>
           <Outlet />
         </Grid>
       </Grid>

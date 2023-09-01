@@ -18,12 +18,12 @@ import HomeIcon from "@mui/icons-material/Home";
 import MenuIcon from "@mui/icons-material/Menu";
 import LogoutIcon from "@mui/icons-material/Logout";
 import BookmarkIcon from "@mui/icons-material/Bookmark";
+import AddCircleIcon from '@mui/icons-material/AddCircle';
 import NotificationsIcon from "@mui/icons-material/Notifications";
-import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
 
+import { Link, useNavigate } from "react-router-dom";
 import { logout } from "../../redux/fetures/Auth/authSlice";
 import { useAppSelector, useAppDispatch } from "../../redux/app/store";
-import { Link, useNavigate } from "react-router-dom";
 
 const drawerWidth = 240;
 
@@ -31,7 +31,7 @@ interface Props {
   window?: () => Window;
 }
 
-export default function ResponsiveDrawer(props: Props) {
+export default function Sidebar(props: Props) {
   const [mobileOpen, setMobileOpen] = React.useState(false);
   const { user } = useAppSelector((state) => state.auth);
   const { window } = props;
@@ -67,7 +67,7 @@ export default function ResponsiveDrawer(props: Props) {
     },
     {
       label: "Create Post",
-      icon: <AddCircleOutlineIcon sx={{ fontSize: 30 }} />,
+      icon: <AddCircleIcon sx={{ fontSize: 30 }} />,
       path: "/create-post",
     },
     {

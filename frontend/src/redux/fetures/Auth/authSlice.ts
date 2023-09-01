@@ -1,30 +1,9 @@
+import { NavigateFunction } from "react-router-dom";
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 
+import { initialState } from "../authState";
 import authServices from "./authServices";
-import {
-  IAuth,
-  IForgotPassword,
-  IUser,
-} from "../../../interfaces/AuthInterface";
-import { NavigateFunction } from "react-router-dom";
-
-const user = JSON.parse(localStorage.getItem("user") as string);
-
-interface AccountState {
-  user: IUser | null;
-  isError: boolean;
-  isSuccess: boolean;
-  isLoading: boolean;
-  message: string;
-}
-
-const initialState: AccountState = {
-  user: user ? user : null,
-  isError: false,
-  isSuccess: false,
-  isLoading: false,
-  message: "",
-};
+import { IAuth, IForgotPassword } from "../../../interfaces/AuthInterface";
 
 // *************************** Auth *************************** //
 // register

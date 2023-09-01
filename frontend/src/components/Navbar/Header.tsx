@@ -245,7 +245,7 @@ export default function Header() {
                     <IconButton
                       size='large'
                       edge='end'
-                      aria-label='account of current user'
+                      aria-label='account of current auth'
                       aria-controls={menuId}
                       aria-haspopup='true'
                       onClick={handleProfileMenuOpen}

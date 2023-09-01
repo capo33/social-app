@@ -4,10 +4,9 @@ import {
   createBrowserRouter,
   createRoutesFromElements,
 } from "react-router-dom";
+import { Profile } from "../pages/User/Index";
+import { Home, AddPost } from "../pages/home/Index";
 import { ForgotPassword, Login, Register } from "../pages/auth/Index";
-import Home from "../pages/home/Index";
-import Profile from "../pages/User/Index";
-import AddPost from "../components/AddPost/AddPost";
 
 const routes = createBrowserRouter(
   createRoutesFromElements(

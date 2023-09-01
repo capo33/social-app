@@ -1,17 +1,35 @@
 import { Request, Response } from "express";
 
 import UserModel from "../models/User";
-import { generateToken } from "../utils/generateToken";
-import { Types } from "mongoose";
+import PostModel from "../models/Post";
 
 // @desc    Get logged in user
 // @route   GET /api/v1/users/me
 // @access  Private
 const getProfile = async (req: Request, res: Response): Promise<void> => {
   try {
+    const user = await UserModel.findById(req.user?._id)
+      .select("-password")
+      .populate("followers", "_id name")
+      .populate("following", "_id name");
+
+    // Check if user exists
+    if (!user) {
+      res.status(404);
+      throw new Error("User not found");
+    }
+
+    // Get user's posts
+    const posts = await PostModel.find({ postedBy: req.user?._id })
+      .populate("postedBy", "_id name")
+      .exec();
+
+    // Return user profile and posts
+
     res.status(200).json({
       message: "User profile fetched successfully",
-      user: req.user,
+      user,
+      posts,
     });
   } catch (error) {
     if (error instanceof Error)
@@ -30,6 +48,7 @@ const updateProfile = async (req: Request, res: Response): Promise<void> => {
   try {
     // Check if user exists
     const user = await UserModel.findById(req.user?._id);
+    
     if (!user) {
       res.status(404);
       throw new Error("User not found");

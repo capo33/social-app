@@ -1,6 +1,6 @@
 import * as React from "react";
 import { toast } from "react-hot-toast";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 // Material UI
 import {
   Container,
@@ -36,12 +36,18 @@ export default function Register() {
 
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
+  const location = useLocation();
+
+  const token = user?.token;
+  const redirect = location.search ? location.search.split("=")[1] : "/";
 
   React.useEffect(() => {
-    if (user) {
-      navigate("/");
+    if (token) {
+      navigate(redirect);
+    } else {
+      navigate("/register");
     }
-  }, [user, navigate]);
+  }, [token, navigate, redirect]);
 
   const handleClickShowPassword = () => setShowPassword((show) => !show);
   const handleMouseDownPassword = (

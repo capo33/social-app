@@ -1,6 +1,6 @@
 import * as React from "react";
 import { toast } from "react-hot-toast";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 // Material UI
 import {
   Container,
@@ -32,15 +32,22 @@ export default function Login() {
   });
 
   const { user } = useAppSelector((state) => state.auth);
-
+ 
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
+  const location = useLocation();
 
+  const token = user?.token;
+  const redirect = location.search ? location.search.split("=")[1] : "/";
+
+  // Redirect user to home page if user is already logged in
   React.useEffect(() => {
-    if (user) {
-      navigate("/");
+    if (token) {
+      navigate(redirect);
+    } else {
+      navigate("/login");
     }
-  }, [user, navigate]);
+  }, [token, navigate, redirect]);
 
   const handleClickShowPassword = () => setShowPassword((show) => !show);
   const handleMouseDownPassword = (
