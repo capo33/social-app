@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from "react";
-import { Link, useNavigate, useParams } from "react-router-dom";
+import React, { useEffect } from "react";
+import { Link } from "react-router-dom";
 // Material Ui
 import {
   Box,
@@ -17,27 +17,22 @@ import {
 import SettingsIcon from "@mui/icons-material/Settings";
 
 import { userProfile } from "../../redux/fetures/User/userSlice";
-import { useAppSelector, useAppDispatch } from "../../redux/app/store";
 import { getAllPosts } from "../../redux/fetures/Post/postSlice";
+import { useAppSelector, useAppDispatch } from "../../redux/app/store";
 
 function Profile() {
-  // const { user } = useAppSelector((state) => state.user);
   const { user } = useAppSelector((state) => state.auth);
-  const {user: me} = useAppSelector((state) => state.user);
   const { posts } = useAppSelector((state) => state.posts);
-  
+  const { user: me } = useAppSelector((state) => state.user);
+
   const dispatch = useAppDispatch();
-  const navigate = useNavigate();
-  
+
   const owenPosts = posts.filter((post) => post?.postedBy?._id === user?._id);
-  console.log('user', user);
-  console.log('me', me);
-    
   const token = user?.token as string;
 
   useEffect(() => {
     dispatch(getAllPosts());
-   }, [dispatch]);
+  }, [dispatch]);
 
   useEffect(() => {
     if (user) {
@@ -46,7 +41,7 @@ function Profile() {
   }, [dispatch, user, token]);
 
   return (
-    <Container sx={{ mt: "3rem" }}>
+    <Container sx={{ my: 10 }}>
       <CardContent
         sx={{
           display: "flex",
@@ -69,6 +64,7 @@ function Profile() {
               width: "160px",
               height: "160px",
               borderRadius: "80px",
+              mr: 3,
             }}
           />
           <div>
