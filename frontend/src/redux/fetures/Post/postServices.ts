@@ -67,7 +67,7 @@ const unlikePost = async (id: string, token: string) => {
 };
 
 // Comment on a post
-const commentOnPost = async (comment: string, id: string, token: string) => {
+const commentPost = async (comment: string, id: string, token: string) => {
   const rsponse = await axios.put(
     `${POST_URL}/comment`,
     { comment, postId: id },
@@ -116,7 +116,7 @@ const postServices = {
   deletePost,
   likePost,
   unlikePost,
-  commentOnPost,
+  commentPost,
   deleteComment,
   myPosts,
 };

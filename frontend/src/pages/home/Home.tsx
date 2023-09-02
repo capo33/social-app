@@ -24,19 +24,19 @@ import {
 import { red } from "@mui/material/colors";
 import ChatIcon from "@mui/icons-material/Chat";
 import PublicIcon from "@mui/icons-material/Public";
-import MoreVertIcon from "@mui/icons-material/MoreVert";
 import FavoriteIcon from "@mui/icons-material/Favorite";
-import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
+import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 import BookmarkBorderIcon from "@mui/icons-material/BookmarkBorder";
+
 import {
   deletePost,
   getAllPosts,
   likePost,
   unlikePost,
 } from "../../redux/fetures/Post/postSlice";
-import { useAppDispatch, useAppSelector } from "../../redux/app/store";
 import { formatDate } from "../../utils/Index";
+import { useAppDispatch, useAppSelector } from "../../redux/app/store";
 
 export default function Home() {
   const { posts } = useAppSelector((state) => state.posts);
@@ -163,7 +163,7 @@ export default function Home() {
                     {post?.likes?.length}{" "}
                     {post?.likes?.length > 1 ? "likes" : "like"}
                   </Typography>
-                  
+
                   {/* Comments */}
                   <CardActions disableSpacing>
                     {post?.comments?.length > 0 && (

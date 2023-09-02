@@ -181,6 +181,86 @@ export const unlikePost = createAsyncThunk(
   }
 );
 
+// comment post
+
+export const commentPost = createAsyncThunk(
+  "posts/commentPost",
+  async (
+    {
+      comment,
+      postId,
+      token,
+    }: { comment: string; postId: string; token: string },
+    thunkAPI
+  ) => {
+    try {
+      const response = await postServices.commentPost(comment, postId, token);
+      thunkAPI.dispatch(getAllPosts());
+      return response;
+    } catch (error: unknown | any) {
+      const message =
+        (error.response &&
+          error.response.data &&
+          error.response.data.message) ||
+        error.message ||
+        error.toString();
+      return thunkAPI.rejectWithValue(message);
+    }
+  }
+);
+
+// uncomment post
+
+export const deleteCommentPost = createAsyncThunk(
+  "posts/deleteCommentPost",
+  async (
+    {
+      postId,
+      commentId,
+      token,
+    }: { postId: string; commentId: string; token: string },
+    thunkAPI
+  ) => {
+    try {
+      const response = await postServices.deleteComment(
+        postId,
+        commentId,
+        token
+      );
+      thunkAPI.dispatch(getAllPosts());
+      return response;
+    } catch (error: unknown | any) {
+      const message =
+        (error.response &&
+          error.response.data &&
+          error.response.data.message) ||
+        error.message ||
+        error.toString();
+      return thunkAPI.rejectWithValue(message);
+    }
+  }
+);
+
+// my posts
+
+export const myPosts = createAsyncThunk(
+  "posts/myPosts",
+  async (token: string, thunkAPI) => {
+    try {
+      const response = await postServices.myPosts(token);
+      return response;
+    } catch (error: unknown | any) {
+      const message =
+        (error.response &&
+          error.response.data &&
+          error.response.data.message) ||
+        error.message ||
+        error.toString();
+      return thunkAPI.rejectWithValue(message);
+    }
+  }
+);
+
 const postSlice = createSlice({
   name: "posts",
   initialState,
@@ -284,6 +364,63 @@ const postSlice = createSlice({
       state.posts = newdata;
     });
     builder.addCase(unlikePost.rejected, (state, { payload }) => {
+      state.isLoading = false;
+      state.isError = true;
+      state.message = payload as string;
+    });
+
+    // comment a post
+    builder.addCase(commentPost.pending, (state) => {
+      state.isLoading = true;
+    });
+    builder.addCase(commentPost.fulfilled, (state, { payload }) => {
+      state.isLoading = false;
+      state.isSuccess = true;
+      const newdata = state.posts.map((post: IPost) => {
+        if (post?._id === payload?.data?._id) {
+          return payload?.data;
+        }
+        return post;
+      });
+      state.posts = newdata;
+    });
+    builder.addCase(commentPost.rejected, (state, { payload }) => {
+      state.isLoading = false;
+      state.isError = true;
+      state.message = payload as string;
+    });
+
+    // delete a comment
+    builder.addCase(deleteCommentPost.pending, (state) => {
+      state.isLoading = true;
+    });
+    builder.addCase(deleteCommentPost.fulfilled, (state, { payload }) => {
+      state.isLoading = false;
+      state.isSuccess = true;
+      const newdata = state.posts.map((post: IPost) => {
+        if (post?._id === payload?.data?._id) {
+          return payload?.data;
+        }
+        return post;
+      });
+      state.posts = newdata;
+    });
+    builder.addCase(deleteCommentPost.rejected, (state, { payload }) => {
+      state.isLoading = false;
+      state.isError = true;
+      state.message = payload as string;
+    });
+
+    // my posts
+    builder.addCase(myPosts.pending, (state) => {
+      state.isLoading = true;
+    });
+    builder.addCase(myPosts.fulfilled, (state, { payload }) => {
+      state.isLoading = false;
+      state.isSuccess = true;
+      state.posts = payload.data;
+    });
+    builder.addCase(myPosts.rejected, (state, { payload }) => {
       state.isLoading = false;
       state.isError = true;
       state.message = payload as string;
