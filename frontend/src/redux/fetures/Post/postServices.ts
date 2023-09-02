@@ -116,6 +116,7 @@ const postServices = {
   unlikePost,
   commentOnPost,
   deleteComment,
+  myPosts,
 };
 
 export default postServices;
