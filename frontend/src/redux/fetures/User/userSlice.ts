@@ -1,3 +1,4 @@
+import { NavigateFunction } from "react-router-dom";
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 
 import userServices from "./userService";
@@ -32,12 +33,19 @@ export const updateUserProfile = createAsyncThunk(
       formData,
       token,
       toast,
-    }: { formData: IUpdateUser; token: string; toast: any },
+      navigate,
+    }: {
+      formData: IUpdateUser;
+      token: string;
+      toast: any;
+      navigate: NavigateFunction;
+    },
     { rejectWithValue }
   ) => {
     try {
       const response = await userServices.updateUserProfile(formData, token);
       toast(response.message, { type: "success" });
+      navigate("/profile");
       return response;
     } catch (error: unknown | any) {
       const message =
