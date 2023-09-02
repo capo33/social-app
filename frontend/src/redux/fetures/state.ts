@@ -1,9 +1,9 @@
-import {  IUserProfileData } from "../../interfaces/UserInterface";
+import { IUser } from "../../interfaces/UserInterface";
 
 const user = JSON.parse(localStorage.getItem("user") as string);
 
 interface AccountState {
-  user: IUserProfileData | null;
+  user: IUser | null;
   isError: boolean;
   isSuccess: boolean;
   isLoading: boolean;

@@ -12,11 +12,11 @@ function App() {
     <Box>
       {!user && <Header />}
       <Grid container>
-        <Grid item md={2} >
+        <Grid item md={3} sm={2} xs={12}>
           {user && <Sidebar />}
           <Toaster />
         </Grid>
-        <Grid item md={8}>
+        <Grid item md={7 } sm={10} xs={12}>
           <Outlet />
         </Grid>
       </Grid>

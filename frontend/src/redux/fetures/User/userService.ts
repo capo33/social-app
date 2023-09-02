@@ -16,14 +16,8 @@ const getUserProfile = async (token: string) => {
 
 // update user profile
 
-const updateUserProfile = async (
-  userId: string,
-  token: string,
-  formData: IUpdateUser
-) => {
-  const response = await axios.put(`${USER_URL}/update-profile`, {
-    userId,
-    formData,
+const updateUserProfile = async (formData: IUpdateUser, token: string) => {
+  const response = await axios.put(`${USER_URL}/update-profile`, formData, {
     headers: {
       Authorization: `Bearer ${token}`,
     },

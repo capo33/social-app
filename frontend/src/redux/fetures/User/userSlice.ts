@@ -1,7 +1,8 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 
 import userServices from "./userService";
-import { initialState } from "../authState";
+import { initialState } from "../state";
+import { IUpdateUser } from "../../../interfaces/UserInterface";
 
 // Get user profile
 export const userProfile = createAsyncThunk(
@@ -10,6 +11,33 @@ export const userProfile = createAsyncThunk(
     try {
       const response = await userServices.getUserProfile(token);
 
+      return response;
+    } catch (error: unknown | any) {
+      const message =
+        (error.response &&
+          error.response.data &&
+          error.response.data.message) ||
+        error.message ||
+        error.toString();
+      return rejectWithValue(message);
+    }
+  }
+);
+
+// Update user profile
+export const updateUserProfile = createAsyncThunk(
+  "auth/updateUserProfile",
+  async (
+    {
+      formData,
+      token,
+      toast,
+    }: { formData: IUpdateUser; token: string; toast: any },
+    { rejectWithValue }
+  ) => {
+    try {
+      const response = await userServices.updateUserProfile(formData, token);
+      toast(response.message, { type: "success" });
       return response;
     } catch (error: unknown | any) {
       const message =
@@ -38,6 +66,21 @@ export const authSlice = createSlice({
       state.user = payload;
     });
     builder.addCase(userProfile.rejected, (state, { payload }) => {
+      state.isLoading = false;
+      state.isError = true;
+      state.message = payload as string;
+    });
+
+    // Update user profile
+    builder.addCase(updateUserProfile.pending, (state) => {
+      state.isLoading = true;
+    });
+    builder.addCase(updateUserProfile.fulfilled, (state, { payload }) => {
+      state.isLoading = false;
+      state.isSuccess = true;
+      state.user = payload;
+    });
+    builder.addCase(updateUserProfile.rejected, (state, { payload }) => {
       state.isLoading = false;
       state.isError = true;
       state.message = payload as string;

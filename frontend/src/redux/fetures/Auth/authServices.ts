@@ -36,6 +36,7 @@ const forgotPassword = async (formData: IForgotPassword) => {
   return response.data;
 };
 
+
 const authServices = {
   register,
   login,

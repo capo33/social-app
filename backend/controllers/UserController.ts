@@ -2,6 +2,7 @@ import { Request, Response } from "express";
 
 import UserModel from "../models/User";
 import PostModel from "../models/Post";
+import { generateToken } from "../utils/generateToken";
 
 // @desc    Get logged in user
 // @route   GET /api/v1/users/me
@@ -24,13 +25,11 @@ const getProfile = async (req: Request, res: Response): Promise<void> => {
       .populate("postedBy", "_id name")
       .exec();
 
-    // Return user profile and posts
+    // Add posts to the user
+    user?.set({ posts: posts });
 
-    res.status(200).json({
-      message: "User profile fetched successfully",
-      user,
-      posts,
-    });
+    // Return user profile and posts
+    res.status(200).json(user);
   } catch (error) {
     if (error instanceof Error)
       res.status(400).json({
@@ -48,7 +47,7 @@ const updateProfile = async (req: Request, res: Response): Promise<void> => {
   try {
     // Check if user exists
     const user = await UserModel.findById(req.user?._id);
-    
+
     if (!user) {
       res.status(404);
       throw new Error("User not found");
@@ -57,7 +56,7 @@ const updateProfile = async (req: Request, res: Response): Promise<void> => {
     // Update user
     const updatedUser = await UserModel.findByIdAndUpdate(
       req.user?._id,
-      req.body,
+      { ...req.body },
       { new: true }
     ).select("-password");
 

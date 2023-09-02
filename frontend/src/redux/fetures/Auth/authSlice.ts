@@ -1,7 +1,7 @@
 import { NavigateFunction } from "react-router-dom";
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 
-import { initialState } from "../authState";
+import { initialState } from "../state";
 import authServices from "./authServices";
 import { IAuth, IForgotPassword } from "../../../interfaces/AuthInterface";
 
@@ -88,7 +88,7 @@ export const forgotPassword = createAsyncThunk(
     }
   }
 );
-
+  
 const authSlice = createSlice({
   name: "auth",
   initialState,

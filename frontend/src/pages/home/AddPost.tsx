@@ -117,7 +117,7 @@ const AddPost = () => {
               size='small'
             >
               {/* Upload image to cloudinary */}
-              <Cloudinary setFormData={setFormData} formData={formData} />;
+              <Cloudinary setFormData={setFormData} formData={formData} />
               <PhotoCamera />
               Upload
             </IconButton>

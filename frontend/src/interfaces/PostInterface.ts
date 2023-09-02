@@ -6,7 +6,7 @@ export interface IPostCreate {
 }
 
 export interface IPostedBy {
-  id: string;
+  _id: string;
   username: string;
   image: string;
 }

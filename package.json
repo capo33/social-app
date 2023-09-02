@@ -9,7 +9,7 @@
     "start": "ts-node backend/index.ts",
     "tsc": "tsc -w backend/index.ts",
     "dev": "tsx watch backend/index.ts",
-    "server": "nodemon backend/index.ts",
+    "server": "nodemon backend/index.ts --ignore client",
     "prod": "tsc && node ./build/index.js",
     "build": "npm install && npm install --prefix frontend && npm run build --prefix frontend"
   },

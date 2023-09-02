@@ -1,119 +1,139 @@
 import React, { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
+// Material Ui
 import {
   Box,
-  CircularProgress,
   Container,
-  Input,
-  InputLabel,
+  Grid,
+  Typography,
+  Avatar,
+  Card,
+  Button,
+  CardContent,
+  Divider,
 } from "@mui/material";
-import Navbar from "../../components/Navbar/Header";
-import Typography from "@mui/material/Typography";
-import Avatar from "@mui/material/Avatar";
-import ChatBubbleIcon from "@mui/icons-material/ChatBubble";
-import Dialog from "@mui/material/Dialog";
-import Card from "@mui/material/Card";
-import { FormControl } from "@mui/material";
-import Button from "@mui/material/Button";
-import Stack from "@mui/material/Stack";
+
+// Material Icon
+import SettingsIcon from "@mui/icons-material/Settings";
+
+import { userProfile } from "../../redux/fetures/User/userSlice";
+import { useAppSelector, useAppDispatch } from "../../redux/app/store";
+import { getAllPosts } from "../../redux/fetures/Post/postSlice";
 
 function Profile() {
-  const { id } = useParams();
-  const [userData, setUserdata] = useState(null);
-  const [posts, setPosts] = useState([]);
-  const [open, setOpen] = useState(null);
+  // const { user } = useAppSelector((state) => state.user);
+  const { user } = useAppSelector((state) => state.auth);
+  const {user: me} = useAppSelector((state) => state.user);
+  const { posts } = useAppSelector((state) => state.posts);
+  
+  const dispatch = useAppDispatch();
+  const navigate = useNavigate();
+  
+  const owenPosts = posts.filter((post) => post?.postedBy?._id === user?._id);
+  console.log('user', user);
+  console.log('me', me);
+    
+  const token = user?.token as string;
 
-  const handleClickOpen = (id: any) => {
-    setOpen(id);
-  };
+  useEffect(() => {
+    dispatch(getAllPosts());
+   }, [dispatch]);
 
-  const handleClose = () => {
-    setOpen(null);
-  };
-  // useEffect(()=>{
-  //     database.users.doc(id).onSnapshot((snap)=>{
-  //         setUserdata(snap.data())
-  //     })
-  // },[id])
-
-  // useEffect(async()=>{
-  //     if(userData!=null){
-  //     let parr = [];
-  //     for(let i=0;i<userData?.postIds?.length;i++){
-  //         let postData = await database.posts.doc(userData.postIds[i]).get()
-  //         parr.push({...postData.data(),postId:postData.id})
-  //     }
-  //     setPosts(parr)
-  // }
-  // },[userData])
+  useEffect(() => {
+    if (user) {
+      dispatch(userProfile(token));
+    }
+  }, [dispatch, user, token]);
 
   return (
-    <Container maxWidth='md'>
-      <Box
+    <Container sx={{ mt: "3rem" }}>
+      <CardContent
         sx={{
-          flexGrow: 1,
           display: "flex",
-          justifyContent: "space-around",
           alignItems: "center",
-          margin: "18px 0px",
-          borderBottom: "1px solid grey",
-          width: "75%",
+          justifyContent: "center",
+          flexDirection: "column",
         }}
       >
-        <Box>
+        <Box
+          sx={{
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "space-between",
+          }}
+        >
           <Avatar
-            alt='Remy Sharp'
-            src='/static/images/avatar/1.jpg'
-            style={{
+            src={me?.image}
+            alt={me?.username}
+            sx={{
               width: "160px",
               height: "160px",
               borderRadius: "80px",
-              marginBottom: "10px",
             }}
           />
-        </Box>
-        <Box
-          sx={{
-            flexGrow: 1,
-            display: "flex",
-            justifyContent: "space-around",
-            alignItems: "center",
-            margin: "3rem",
-          }}
-        >
-          <h4>Name</h4>
-          <div
-            style={{
-              display: "flex",
-              justifyContent: "space-between",
-            }}
-          >
-            <h6>
-              {/* {user?.posts?.length}{" "}
-              {user?.posts?.length === 1 ? "post" : "posts"} */}
-            </h6>
+          <div>
+            <Typography variant='h5'>{me?.username}</Typography>
+            <Typography variant='body1'>@{me?.username}</Typography>
 
-            <h6> followers</h6>
-            <h6> following</h6>
+            <Link to='/update-profile'>
+              <Button variant='contained' color='info'>
+                <SettingsIcon />
+              </Button>
+            </Link>
           </div>
         </Box>
-        <div className='gallery'>
-          {/* {user?.posts?.length === 0 && (
+        <Typography variant='body2' sx={{ mb: 1 }}>
+          {me?.bio ? `Bio: ${me?.bio}` : "No Bio"}
+        </Typography>
+        <Typography
+          variant='h6'
+          sx={{
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "space-around",
+            flexWrap: "wrap",
+          }}
+        >
+          <span>
+            <strong>{owenPosts?.length} </strong>
+            {owenPosts?.length === 1 ? " post" : "posts "}
+          </span>
+          <span style={{ marginLeft: "20px" }}>
+            <strong>{me?.followers?.length}</strong> followers
+          </span>
+          <span style={{ marginLeft: "20px" }}>
+            <strong>{me?.following?.length}</strong> following
+          </span>
+        </Typography>
+
+        <Divider style={{ margin: "20px 0", color: "black" }} />
+
+        <Typography variant='h6'>Posts</Typography>
+
+        <Divider style={{ margin: "20px 0", color: "black" }} />
+
+        {owenPosts?.length === 0 && (
           <h2 style={{ textAlign: "center" }}>No posts yet</h2>
-        )} */}
-          {/* {user?.posts &&
-          user?.posts.map((item) => {
-            return (
-              <img
-                className='item'
-                src={item.image}
-                alt={item.title}
-                key={item._id}
-              />
-            );
-          })} */}
-        </div>
-      </Box>
+        )}
+
+        <Grid container spacing={2}>
+          {owenPosts &&
+            owenPosts?.map((post) => (
+              <Grid item xs={12} sm={6} md={4} key={post._id}>
+                <Card>
+                  <img
+                    src={post.image}
+                    alt={`Post ${post._id}`}
+                    style={{ width: "100%", height: "auto" }}
+                  />
+                  <CardContent>
+                    <Typography variant='body2'>{post.title}</Typography>
+                  </CardContent>
+                </Card>
+              </Grid>
+            ))}
+        </Grid>
+      </CardContent>
     </Container>
   );
 }

@@ -10,7 +10,6 @@ interface PostState {
   isError: boolean;
   isSuccess: boolean;
   isLoading: boolean;
-
   message: string;
 }
 
@@ -25,7 +24,7 @@ const initialState: PostState = {
     tags: [],
     comments: [],
     postedBy: {
-      id: "",
+      _id: "",
       username: "",
       image: "",
     },

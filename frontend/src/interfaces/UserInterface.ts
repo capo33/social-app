@@ -23,14 +23,14 @@ export interface IUser {
   createdAt?: Date;
 }
 
-export interface IUserProfileData extends IUser {
-  posts?: IPost[];
+export interface IUserProfileData {
+  result: IUser;
+  posts: IPost[];
 }
 
 export interface IUpdateUser {
   username: string;
   email: string;
-  password: string;
   bio: string;
   image?: string;
 }
