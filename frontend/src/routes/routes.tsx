@@ -5,7 +5,7 @@ import {
   createRoutesFromElements,
 } from "react-router-dom";
 import { Home, AddPost } from "../pages/home/Index";
-import { Profile, UpdateProfile } from "../pages/User/Index";
+import { Profile, UpdateProfile, UserProfile } from "../pages/User/Index";
 import { ForgotPassword, Login, Register } from "../pages/auth/Index";
 
 const routes = createBrowserRouter(
@@ -18,6 +18,7 @@ const routes = createBrowserRouter(
       <Route path='profile' element={<Profile />} />
       <Route path='create-post' element={<AddPost />} />
       <Route path='update-profile' element={<UpdateProfile />} />
+      <Route path='profile/:id' element={<UserProfile />} />
     </Route>
   )
 );

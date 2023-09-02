@@ -26,4 +26,5 @@ export interface IPost {
   tags: string[];
   comments: IComments[];
   postedBy?: IPostedBy;
+  createdAt: number;
 }

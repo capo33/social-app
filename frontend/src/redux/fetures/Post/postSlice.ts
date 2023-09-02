@@ -28,6 +28,7 @@ const initialState: PostState = {
       username: "",
       image: "",
     },
+    createdAt: 0,
   },
   isError: false,
   isSuccess: false,
@@ -56,7 +57,6 @@ export const getAllPosts = createAsyncThunk(
 );
 
 // get post by id
-
 export const getPostById = createAsyncThunk(
   "posts/getPostById",
   async (id: string, { rejectWithValue }) => {

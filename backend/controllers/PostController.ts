@@ -25,7 +25,6 @@ const getPosts = async (req: Request, res: Response): Promise<void> => {
 // @desc    Get a single post
 // @route   GET /api/v1/posts/:postId
 // @access  Public
-
 const getPost = async (req: Request, res: Response): Promise<void> => {
   try {
     const post = await PostModel.findById(req.params.postId);

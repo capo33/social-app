@@ -16,17 +16,21 @@ import {
   Avatar,
   IconButton,
   Stack,
+  Button,
+  TextField,
 } from "@mui/material";
 
 // Material UI Icons
 import { red } from "@mui/material/colors";
 import ChatIcon from "@mui/icons-material/Chat";
+import GroupsIcon from "@mui/icons-material/Groups";
+import PublicIcon from "@mui/icons-material/Public";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 import FavoriteIcon from "@mui/icons-material/Favorite";
 import BookmarkBorderIcon from "@mui/icons-material/BookmarkBorder";
-
 import { getAllPosts } from "../../redux/fetures/Post/postSlice";
 import { useAppDispatch, useAppSelector } from "../../redux/app/store";
+import { formatDate } from "../../utils/Index";
 
 export default function Home() {
   const { posts } = useAppSelector((state) => state.posts);
@@ -43,7 +47,7 @@ export default function Home() {
   }, [dispatch]);
 
   return (
-    <Container maxWidth='lg'>
+    <Container maxWidth='lg' sx={{ my: 10 }}>
       <Box>
         <Typography
           component='h1'
@@ -51,39 +55,38 @@ export default function Home() {
           align='center'
           color='text.primary'
           gutterBottom
-          sx={{ fontFamily: "monospace", color: "blue" }}
         >
-          Social Network
+          Social Network <PublicIcon sx={{ fontSize: 40 }} />
         </Typography>
       </Box>
       <Grid container spacing={4}>
         {posts &&
           posts?.map((post) => (
-            <Grid
-              item
-              key={post?._id}
-              xs={12}
-              sm={6}
-              md={7}
-              sx={{
-                m: "0 auto",
-              }}
-            >
+            <Grid item key={post?._id} xs={12} sm={6}>
               <Card>
-                <CardHeader
-                  avatar={
-                    <Avatar sx={{ bgcolor: red[500] }} aria-label='recipe'>
-                      {post?.postedBy?.image}
-                    </Avatar>
+                {/* Navigate to my own profile or to the other user profile */}
+                <Link
+                  to={
+                    post?.postedBy?._id !== user?._id
+                      ? `/profile/${post?.postedBy?._id}`
+                      : "/profile"
                   }
-                  action={
-                    <IconButton>
-                      <MoreVertIcon />
-                    </IconButton>
-                  }
-                  title={post?.postedBy?.username}
-                  subheader='September 14, 2016'
-                />
+                >
+                  <CardHeader
+                    avatar={
+                      <Avatar sx={{ bgcolor: red[500] }} aria-label='recipe'>
+                        {post?.postedBy?.image}
+                      </Avatar>
+                    }
+                    action={
+                      <IconButton>
+                        <MoreVertIcon />
+                      </IconButton>
+                    }
+                    title={`by@ ${post?.postedBy?.username}`}
+                    subheader={formatDate(post?.createdAt)}
+                  />
+                </Link>
 
                 <CardMedia
                   component='img'
@@ -116,6 +119,59 @@ export default function Home() {
                     </IconButton>
                   </CardActions>
                 </Stack>
+                {/* Comments */}
+                <CardActions disableSpacing>
+                  {post?.comments?.length > 0 && (
+                    <IconButton
+                      aria-label='comments'
+                      onClick={() => setShow(!show)}
+                      sx={{ color: "white" }}
+                    >
+                      <ChatIcon />
+                    </IconButton>
+                  )}
+                  {show &&
+                    post?.comments?.map((comment) => (
+                      <Typography
+                        key={comment?._id}
+                        variant='body2'
+                        color='text.secondary'
+                      >
+                        {comment?.comment}
+                      </Typography>
+                    ))}
+                </CardActions>
+                {/* Add Comments */}
+                <CardActions disableSpacing>
+                  <form
+                    noValidate
+                    autoComplete='off'
+                    style={{ width: "100%" }}
+                    className='comment-form'
+                    id='comment-form'
+                  >
+                    <Stack direction='row' spacing={2}></Stack>
+                    <TextField
+                      id='standard-basic'
+                      type='text'
+                      label='Add Comment'
+                      value={comment}
+                      name='comment'
+                      onChange={(e) => setComment(e.target.value)}
+                      fullWidth
+                      variant='standard'
+                    />
+                    <Button
+                      type='submit'
+                      fullWidth
+                      variant='contained'
+                      color='primary'
+                      sx={{ mt: 3, mb: 2 }}
+                    >
+                      Submit
+                    </Button>
+                  </form>
+                </CardActions>
               </Card>
             </Grid>
           ))}
