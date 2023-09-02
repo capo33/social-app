@@ -25,8 +25,9 @@ import { red } from "@mui/material/colors";
 import ChatIcon from "@mui/icons-material/Chat";
 import PublicIcon from "@mui/icons-material/Public";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
-import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
 import FavoriteIcon from "@mui/icons-material/Favorite";
+import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
+import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
 import BookmarkBorderIcon from "@mui/icons-material/BookmarkBorder";
 import {
   deletePost,
@@ -129,10 +130,21 @@ export default function Home() {
                     alignItems='center'
                     spacing={4}
                   >
+                    {/* Like & Unlike */}
                     <CardActions disableSpacing>
                       <IconButton aria-label='add to favorites'>
-                        <FavoriteIcon />
+                        {post?.likes?.includes(user?._id!) ? (
+                          <FavoriteIcon
+                            sx={{ color: "red" }}
+                            onClick={() => handleUnlike(post?._id!)}
+                          />
+                        ) : (
+                          <FavoriteBorderIcon
+                            onClick={() => handleLike(post?._id!)}
+                          />
+                        )}
                       </IconButton>
+
                       <IconButton aria-label='share'>
                         <ChatIcon />
                       </IconButton>
@@ -143,6 +155,15 @@ export default function Home() {
                       </IconButton>
                     </CardActions>
                   </Stack>
+                  <Typography
+                    variant='body2'
+                    color='text.secondary'
+                    sx={{ ml: 2 }}
+                  >
+                    {post?.likes?.length}{" "}
+                    {post?.likes?.length > 1 ? "likes" : "like"}
+                  </Typography>
+                  
                   {/* Comments */}
                   <CardActions disableSpacing>
                     {post?.comments?.length > 0 && (
