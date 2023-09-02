@@ -112,6 +112,42 @@ const deleteUser = async (req: Request, res: Response): Promise<void> => {
   }
 };
 
+// @desc    Get user profile by id
+// @route   GET /api/v1/users/:id
+// @access  Public
+
+const getUserById = async (req: Request, res: Response): Promise<void> => {
+  try {
+    const user = await UserModel.findById(req.params.id)
+      .select("-password")
+      .populate("followers", "_id name")
+      .populate("following", "_id name");
+
+    // Check if user exists
+    if (!user) {
+      res.status(404);
+      throw new Error("User not found");
+    }
+
+    // Get user's posts
+    const posts = await PostModel.find({ postedBy: req.params.id })
+      .populate("postedBy", "_id name")
+      .exec();
+
+    // Add posts to the user
+
+    res.status(200).json({ user, posts });
+  } catch (error) {
+    if (error instanceof Error) {
+      res.status(400).json({
+        success: false,
+        message: "Something went wrong",
+        error: error.message,
+      });
+    }
+  }
+};
+
 // @desc    Follow a user
 // @route   PUT /api/v1/users/follow
 // @access  Private
@@ -322,6 +358,7 @@ export {
   getProfile,
   updateProfile,
   deleteUser,
+  getUserById,
   followUser,
   unfollowUser,
   sendNotifications,

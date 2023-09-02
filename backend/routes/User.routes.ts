@@ -7,6 +7,7 @@ const router = Router();
 
 router.get("/profile", protect, UserController.getProfile);
 router.get("/get-all-notifications", protect, UserController.getNotifications);
+router.get("/user/:id", UserController.getUserById);
 router.put("/update-profile", protect, UserController.updateProfile);
 router.put("/follow", protect, UserController.followUser);
 router.put("/unfollow", protect, UserController.unfollowUser);
