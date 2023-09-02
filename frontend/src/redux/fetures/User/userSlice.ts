@@ -59,6 +59,25 @@ export const updateUserProfile = createAsyncThunk(
   }
 );
 
+// Get user profile by id
+export const userProfileById = createAsyncThunk(
+  "auth/userProfileById",
+  async (id: string, { rejectWithValue }) => {
+    try {
+      const response = await userServices.getUserProfileById(id);
+      return response;
+    } catch (error: unknown | any) {
+      const message =
+        (error.response &&
+          error.response.data &&
+          error.response.data.message) ||
+        error.message ||
+        error.toString();
+      return rejectWithValue(message);
+    }
+  }
+);
+
 export const authSlice = createSlice({
   name: "user",
   initialState,
@@ -89,6 +108,21 @@ export const authSlice = createSlice({
       state.user = payload;
     });
     builder.addCase(updateUserProfile.rejected, (state, { payload }) => {
+      state.isLoading = false;
+      state.isError = true;
+      state.message = payload as string;
+    });
+
+    // Get user profile by id
+    builder.addCase(userProfileById.pending, (state) => {
+      state.isLoading = true;
+    });
+    builder.addCase(userProfileById.fulfilled, (state, { payload }) => {
+      state.isLoading = false;
+      state.isSuccess = true;
+      state.guest = payload;
+    });
+    builder.addCase(userProfileById.rejected, (state, { payload }) => {
       state.isLoading = false;
       state.isError = true;
       state.message = payload as string;

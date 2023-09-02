@@ -24,7 +24,7 @@ export interface IUser {
 }
 
 export interface IUserProfileData {
-  result: IUser;
+  user: IUser;
   posts: IPost[];
 }
 

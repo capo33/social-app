@@ -15,7 +15,6 @@ const getUserProfile = async (token: string) => {
 };
 
 // update user profile
-
 const updateUserProfile = async (formData: IUpdateUser, token: string) => {
   const response = await axios.put(`${USER_URL}/update-profile`, formData, {
     headers: {
@@ -25,9 +24,16 @@ const updateUserProfile = async (formData: IUpdateUser, token: string) => {
   return response.data;
 };
 
+// get user profile by id
+const getUserProfileById = async (id: string) => {
+  const response = await axios.get(`${USER_URL}/user/${id}`);
+  return response.data;
+}
+
 const userService = {
   getUserProfile,
   updateUserProfile,
+  getUserProfileById
 };
 
 export default userService;

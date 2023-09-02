@@ -14,33 +14,28 @@ import {
 } from "@mui/material";
 
 // Material Icon
-import SettingsIcon from "@mui/icons-material/Settings";
-
-import { userProfile } from "../../redux/fetures/User/userSlice";
+ 
+import {
+   userProfileById,
+} from "../../redux/fetures/User/userSlice";
 import { getAllPosts } from "../../redux/fetures/Post/postSlice";
 import { useAppSelector, useAppDispatch } from "../../redux/app/store";
 
 function UserProfile() {
   const { id } = useParams<{ id: string }>();
 
-  const { user } = useAppSelector((state) => state.auth);
-  const { posts } = useAppSelector((state) => state.posts);
-  const { user: me } = useAppSelector((state) => state.user);
+  const { guest } = useAppSelector((state) => state.user);
+  console.log(guest?.user);
 
   const dispatch = useAppDispatch();
-
-  const owenPosts = posts.filter((post) => post?.postedBy?._id === user?._id);
-  const token = user?.token as string;
 
   useEffect(() => {
     dispatch(getAllPosts());
   }, [dispatch]);
 
   useEffect(() => {
-    if (user) {
-      dispatch(userProfile(token));
-    }
-  }, [dispatch, user, token]);
+    dispatch(userProfileById(id as string));
+  }, [dispatch, id]);
 
   return (
     <Container sx={{ my: 10 }}>
@@ -60,8 +55,8 @@ function UserProfile() {
           }}
         >
           <Avatar
-            src={me?.image}
-            alt={me?.username}
+            src={guest?.user?.image}
+            alt={guest?.user?.username}
             sx={{
               width: "160px",
               height: "160px",
@@ -70,18 +65,18 @@ function UserProfile() {
             }}
           />
           <div>
-            <Typography variant='h5'>{me?.username}</Typography>
-            <Typography variant='body1'>@{me?.username}</Typography>
+            <Typography variant='h5'>{guest?.user?.username}</Typography>
+            <Typography variant='body1'>@{guest?.user?.username}</Typography>
 
+            {/* Follow & UnFollow */}
             <Link to='/update-profile'>
-              <Button variant='contained' color='info'>
-                <SettingsIcon />
-              </Button>
+              <Button variant='contained' color='info'></Button>
+              <Button variant='contained' color='info'></Button>
             </Link>
           </div>
         </Box>
         <Typography variant='body2' sx={{ mb: 1 }}>
-          {me?.bio ? `Bio: ${me?.bio}` : "No Bio"}
+          {guest?.user?.bio ? `Bio: ${guest?.user?.bio}` : "No Bio"}
         </Typography>
         <Typography
           variant='h6'
@@ -93,14 +88,14 @@ function UserProfile() {
           }}
         >
           <span>
-            <strong>{owenPosts?.length} </strong>
-            {owenPosts?.length === 1 ? " post" : "posts "}
+            <strong>{guest?.posts?.length}</strong>
+            {guest?.posts?.length === 1 ? " post" : " posts "}
           </span>
           <span style={{ marginLeft: "20px" }}>
-            <strong>{me?.followers?.length}</strong> followers
+            <strong>{guest?.user?.followers?.length}</strong> followers
           </span>
           <span style={{ marginLeft: "20px" }}>
-            <strong>{me?.following?.length}</strong> following
+            <strong>{guest?.user?.following?.length}</strong> following
           </span>
         </Typography>
 
@@ -110,13 +105,13 @@ function UserProfile() {
 
         <Divider style={{ margin: "20px 0", color: "black" }} />
 
-        {owenPosts?.length === 0 && (
+        {guest?.posts?.length === 0 && (
           <h2 style={{ textAlign: "center" }}>No posts yet</h2>
         )}
 
         <Grid container spacing={2}>
-          {owenPosts &&
-            owenPosts?.map((post) => (
+          {guest?.posts &&
+            guest?.posts?.map((post) => (
               <Grid item xs={12} sm={6} md={4} key={post._id}>
                 <Card>
                   <img
