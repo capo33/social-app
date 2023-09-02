@@ -2,7 +2,6 @@ import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 
 import postServices from "./postServices";
 import { IPost, IPostCreate } from "../../../interfaces/PostInterface";
-import { NavigateFunction } from "react-router-dom";
 
 interface PostState {
   posts: IPost[];
@@ -110,6 +109,78 @@ export const createPost = createAsyncThunk(
   }
 );
 
+// delete post
+
+export const deletePost = createAsyncThunk(
+  "posts/deletePost",
+  async (
+    { postId, token, toast }: { postId: string; token: string; toast: any },
+    thunkAPI
+  ) => {
+    try {
+      const response = await postServices.deletePost(postId, token);
+      toast.success(response?.message);
+      thunkAPI.dispatch(getAllPosts());
+
+      return response;
+    } catch (error: unknown | any) {
+      const message =
+        (error.response &&
+          error.response.data &&
+          error.response.data.message) ||
+        error.message ||
+        error.toString();
+      toast.error(message);
+
+      return thunkAPI.rejectWithValue(message);
+    }
+  }
+);
+
+// like post
+export const likePost = createAsyncThunk(
+  "posts/likePost",
+  async ({ postId, token }: { postId: string; token: string }, thunkAPI) => {
+    try {
+      const response = await postServices.likePost(postId, token);
+      thunkAPI.dispatch(getAllPosts());
+
+      return response;
+    } catch (error: unknown | any) {
+      const message =
+        (error.response &&
+          error.response.data &&
+          error.response.data.message) ||
+        error.message ||
+        error.toString();
+
+      return thunkAPI.rejectWithValue(message);
+    }
+  }
+);
+
+// unlike post
+export const unlikePost = createAsyncThunk(
+  "posts/unlikePost",
+  async ({ postId, token }: { postId: string; token: string }, thunkAPI) => {
+    try {
+      const response = await postServices.unlikePost(postId, token);
+      thunkAPI.dispatch(getAllPosts());
+
+      return response;
+    } catch (error: unknown | any) {
+      const message =
+        (error.response &&
+          error.response.data &&
+          error.response.data.message) ||
+        error.message ||
+        error.toString();
+
+      return thunkAPI.rejectWithValue(message);
+    }
+  }
+);
+
 const postSlice = createSlice({
   name: "posts",
   initialState,
@@ -156,6 +227,63 @@ const postSlice = createSlice({
       state.posts = payload.data;
     });
     builder.addCase(createPost.rejected, (state, { payload }) => {
+      state.isLoading = false;
+      state.isError = true;
+      state.message = payload as string;
+    });
+
+    // delete a post
+    builder.addCase(deletePost.pending, (state) => {
+      state.isLoading = true;
+    });
+    builder.addCase(deletePost.fulfilled, (state, { payload }) => {
+      state.isLoading = false;
+      state.isSuccess = true;
+      state.posts = payload.data;
+    });
+    builder.addCase(deletePost.rejected, (state, { payload }) => {
+      state.isLoading = false;
+      state.isError = true;
+      state.message = payload as string;
+    });
+
+    // like a post
+    builder.addCase(likePost.pending, (state) => {
+      state.isLoading = true;
+    });
+    builder.addCase(likePost.fulfilled, (state, { payload }) => {
+      state.isLoading = false;
+      state.isSuccess = true;
+      const newdata = state.posts.map((post: IPost) => {
+        if (post?._id === payload?.data?._id) {
+          return payload?.data;
+        }
+        return post;
+      });
+      state.posts = newdata;
+    });
+    builder.addCase(likePost.rejected, (state, { payload }) => {
+      state.isLoading = false;
+      state.isError = true;
+      state.message = payload as string;
+    });
+
+    // unlike a post
+    builder.addCase(unlikePost.pending, (state) => {
+      state.isLoading = true;
+    });
+    builder.addCase(unlikePost.fulfilled, (state, { payload }) => {
+      state.isLoading = false;
+      state.isSuccess = true;
+      const newdata = state.posts.map((post: IPost) => {
+        if (post?._id === payload?.data?._id) {
+          return payload?.data;
+        }
+        return post;
+      });
+      state.posts = newdata;
+    });
+    builder.addCase(unlikePost.rejected, (state, { payload }) => {
       state.isLoading = false;
       state.isError = true;
       state.message = payload as string;
