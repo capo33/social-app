@@ -87,7 +87,7 @@ const deleteComment = async (
   commentId: string,
   token: string
 ) => {
-  const rsponse = await axios.put(
+  const rsponse = await axios.delete(
     `${POST_URL}/comment/${postId}/${commentId}`,
     {
       headers: {
@@ -95,6 +95,8 @@ const deleteComment = async (
       },
     }
   );
+  console.log(rsponse.data);
+  
   return rsponse.data;
 };
 

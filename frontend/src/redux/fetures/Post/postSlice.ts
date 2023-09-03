@@ -228,6 +228,8 @@ export const deleteCommentPost = createAsyncThunk(
         token
       );
       thunkAPI.dispatch(getAllPosts());
+      console.log("response", response);
+
       return response;
     } catch (error: unknown | any) {
       const message =

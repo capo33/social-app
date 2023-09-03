@@ -2,6 +2,13 @@ import React, { useEffect, useState } from "react";
 import { toast } from "react-hot-toast";
 import { Link } from "react-router-dom";
 
+import Paper from "@mui/material/Paper";
+import InputBase from "@mui/material/InputBase";
+import Divider from "@mui/material/Divider";
+import MenuIcon from "@mui/icons-material/Menu";
+import SearchIcon from "@mui/icons-material/Search";
+import DirectionsIcon from "@mui/icons-material/Directions";
+import SendIcon from "@mui/icons-material/Send";
 // Material UI
 import {
   Card,
@@ -30,13 +37,177 @@ import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 import BookmarkBorderIcon from "@mui/icons-material/BookmarkBorder";
 
 import {
+  commentPost,
+  deleteCommentPost,
   deletePost,
   getAllPosts,
   likePost,
   unlikePost,
 } from "../../redux/fetures/Post/postSlice";
-import { formatDate } from "../../utils/Index";
+import { formatDate, subStringFunc } from "../../utils/Index";
 import { useAppDispatch, useAppSelector } from "../../redux/app/store";
+import { IPost } from "../../interfaces/PostInterface";
+
+type PostProps = {
+  post: IPost;
+  handleComment: (comment: string, id: string) => void;
+  handleDeleteComment: (postId: string, commentId: string) => void;
+  show: boolean;
+  toggleComment: () => void;
+};
+
+function Post({
+  post,
+  handleComment,
+  handleDeleteComment,
+  show,
+  toggleComment,
+}: PostProps) {
+  const [inputValue, setInputValue] = useState<string>("");
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setInputValue(e.target.value);
+  };
+
+  return (
+    <Box>
+      <Box sx={{ display: "flex", justifyContent: "space-between" }}>
+        <TextField
+          sx={{ ml: 2, width: "100%" }}
+          variant='standard'
+          placeholder='Add a comment...'
+          inputProps={{ "aria-label": "Add a comment..." }}
+          value={inputValue}
+          onChange={handleChange}
+        />
+        <IconButton
+          type='button'
+          sx={{ p: "10px" }}
+          aria-label='search'
+          onClick={() => {
+            handleComment(inputValue, post._id);
+            setInputValue("");
+          }}
+        >
+          <SendIcon />
+        </IconButton>
+      </Box>
+      {show && (
+        <>
+          {post.comments.map((comment: any) => (
+            <Box
+              key={comment._id}
+              sx={{
+                p: "2px 4px",
+                display: "flex",
+                justifyContent: "space-between",
+                alignItems: "center",
+                width: "100%",
+              }}
+            >
+              <Typography variant='body2' color='text.secondary' sx={{ ml: 2 }}>
+                <span style={{ fontWeight: "bolder" }}>
+                  {comment?.postedBy?.username}{" "}
+                </span>
+                {comment.comment}
+              </Typography>
+              <IconButton
+                aria-label='delete'
+                onClick={() => handleDeleteComment(post._id, comment._id)}
+              >
+                <DeleteForeverIcon />
+              </IconButton>
+            </Box>
+          ))}
+        </>
+      )}
+      {/* Toggle comment section depending on the number of comments */}
+      {post?.comments.length > 2 && (
+        <>
+          {show ? (
+            <h6
+              // style={commentStyle}
+              onClick={() => toggleComment()}
+            >
+              <span>Hide Comments</span>
+              <i className='material-icons'>keyboard_arrow_up</i>
+            </h6>
+          ) : (
+            <h6
+              // style={commentStyle}
+              onClick={() => toggleComment()}
+            >
+              <span>
+                {post?.comments?.length > 0
+                  ? "Show Comments"
+                  : "No Comments Yet"}
+              </span>
+              <i className='material-icons'>keyboard_arrow_down</i>
+            </h6>
+          )}
+        </>
+      )}
+
+      {/* Show first two comments */}
+      {post?.comments.length > 0 && !show && (
+        <>
+          {post?.comments.slice(0, 2).map((record) => {
+            return (
+              <h6 key={record._id}>
+                <div
+                  style={{
+                    cursor: "pointer",
+                    display: "flex",
+                    justifyContent: "space-between",
+                    alignItems: "center",
+                  }}
+                >
+                  <span style={{ fontWeight: "bolder" }}>
+                    {record?.postedBy?.username}{" "}
+                  </span>
+                  {record.comment}
+                </div>
+              </h6>
+            );
+          })}
+        </>
+      )}
+
+      {/* Show all comments */}
+      {/* {show && (
+        <>
+          {post?.comments.map((record) => {
+            return (
+              <h6 key={record._id}>
+                <div
+                  style={{
+                    cursor: "pointer",
+                    display: "flex",
+                    justifyContent: "space-between",
+                    alignItems: "center",
+                  }}
+                >
+                  <div>
+                    <p>
+                      <span
+                        style={{
+                          marginRight: "1rem ",
+                        }}
+                      >
+                        {record?.postedBy?.username}
+                      </span>
+                      <span>{subStringFunc(record.comment, 20)}</span>
+                    </p>
+                  </div>
+                </div>
+              </h6>
+            );
+          })}
+        </>
+      )} */}
+    </Box>
+  );
+}
 
 export default function Home() {
   const { posts } = useAppSelector((state) => state.posts);
@@ -60,6 +231,35 @@ export default function Home() {
     dispatch(unlikePost({ postId: id, token }));
   };
 
+  const handleComment = (comment: string, id: string) => {
+    dispatch(commentPost({ comment, postId: id, token }));
+    setComment("");
+  };
+
+  const handleDeleteComment = (postId: string, commentId: string) => {
+    dispatch(deleteCommentPost({ postId, commentId, token }));
+    console.log("postId", postId, "commentId", commentId);
+    console.log("token", token);
+  };
+
+  const handleSubmitComment = (
+    e: React.FormEvent<HTMLFormElement>,
+    id: string
+  ) => {
+    handleComment(comment, id);
+    setComment("");
+    // e.currentTarget.value = "";
+  };
+
+  //  Show and hide comments
+  const toggleComment = () => {
+    if (show) {
+      setShow(false);
+    } else {
+      setShow(true);
+    }
+  };
+
   return (
     <Container maxWidth='lg' sx={{ my: 10 }}>
       <Box>
@@ -77,7 +277,6 @@ export default function Home() {
         {posts &&
           posts.map((post) => {
             const postId = post?._id;
-            console.log(postId);
 
             return (
               <Grid item key={post?._id} xs={12} sm={6}>
@@ -100,12 +299,12 @@ export default function Home() {
                     }
                     action={
                       post?.postedBy?._id === user?._id && (
-                        <IconButton>
-                          <DeleteForeverIcon
-                            onClick={() =>
-                              dispatch(deletePost({ postId, token, toast }))
-                            }
-                          />
+                        <IconButton
+                          onClick={() =>
+                            dispatch(deletePost({ postId, token, toast }))
+                          }
+                        >
+                          <DeleteForeverIcon />
                         </IconButton>
                       )
                     }
@@ -132,18 +331,21 @@ export default function Home() {
                   >
                     {/* Like & Unlike */}
                     <CardActions disableSpacing>
-                      <IconButton aria-label='add to favorites'>
-                        {post?.likes?.includes(user?._id!) ? (
-                          <FavoriteIcon
-                            sx={{ color: "red" }}
-                            onClick={() => handleUnlike(post?._id!)}
-                          />
-                        ) : (
-                          <FavoriteBorderIcon
-                            onClick={() => handleLike(post?._id!)}
-                          />
-                        )}
-                      </IconButton>
+                      {post?.likes?.includes(user?._id!) ? (
+                        <IconButton
+                          aria-label='unlike'
+                          onClick={() => handleUnlike(post?._id!)}
+                        >
+                          <FavoriteIcon sx={{ color: "red" }} />
+                        </IconButton>
+                      ) : (
+                        <IconButton
+                          aria-label='like'
+                          onClick={() => handleLike(post?._id!)}
+                        >
+                          <FavoriteBorderIcon />
+                        </IconButton>
+                      )}
 
                       <IconButton aria-label='share'>
                         <ChatIcon />
@@ -164,59 +366,14 @@ export default function Home() {
                     {post?.likes?.length > 1 ? "likes" : "like"}
                   </Typography>
 
-                  {/* Comments */}
-                  <CardActions disableSpacing>
-                    {post?.comments?.length > 0 && (
-                      <IconButton
-                        aria-label='comments'
-                        onClick={() => setShow(!show)}
-                        sx={{ color: "white" }}
-                      >
-                        <ChatIcon />
-                      </IconButton>
-                    )}
-                    {show &&
-                      post?.comments?.map((comment) => (
-                        <Typography
-                          key={comment?._id}
-                          variant='body2'
-                          color='text.secondary'
-                        >
-                          {comment?.comment}
-                        </Typography>
-                      ))}
-                  </CardActions>
                   {/* Add Comments */}
-                  <CardActions disableSpacing>
-                    <form
-                      noValidate
-                      autoComplete='off'
-                      style={{ width: "100%" }}
-                      className='comment-form'
-                      id='comment-form'
-                    >
-                      <Stack direction='row' spacing={2}></Stack>
-                      <TextField
-                        id='standard-basic'
-                        type='text'
-                        label='Add Comment'
-                        value={comment}
-                        name='comment'
-                        onChange={(e) => setComment(e.target.value)}
-                        fullWidth
-                        variant='standard'
-                      />
-                      <Button
-                        type='submit'
-                        fullWidth
-                        variant='contained'
-                        color='primary'
-                        sx={{ mt: 3, mb: 2 }}
-                      >
-                        Submit
-                      </Button>
-                    </form>
-                  </CardActions>
+                  <Post
+                    show={show}
+                    toggleComment={toggleComment}
+                    post={post}
+                    handleComment={handleComment}
+                    handleDeleteComment={handleDeleteComment}
+                  />
                 </Card>
               </Grid>
             );
