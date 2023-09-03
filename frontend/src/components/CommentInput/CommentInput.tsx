@@ -1,9 +1,13 @@
 import React, { useState } from "react";
-import { IPost } from "../../interfaces/PostInterface";
+
+// Material UI
 import { Box, IconButton, TextField, Typography } from "@mui/material";
-import CommentModal from "../Modals/CommentModal";
+// Material UI Icons
 import DeleteForeverIcon from "@mui/icons-material/Delete";
 import SendIcon from "@mui/icons-material/Send";
+
+import CommentModal from "../Modals/CommentModal";
+import { IPost } from "../../interfaces/PostInterface";
 
 type CommentInputProps = {
   post: IPost;
@@ -17,7 +21,6 @@ const CommentInput = ({
   handleDeleteComment,
 }: CommentInputProps) => {
   const [inputValue, setInputValue] = useState<string>("");
-  const show = false;
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setInputValue(e.target.value);
   };
@@ -48,8 +51,6 @@ const CommentInput = ({
 
       <CommentModal post={post} handleDeleteComment={handleDeleteComment} />
 
-      {/* Show cooments */}
-
       {/* Show first two comments */}
       {post?.comments.length > 0 && (
         <>
@@ -65,7 +66,7 @@ const CommentInput = ({
               }}
             >
               <Typography variant='body1' color='text.secondary' sx={{ ml: 2 }}>
-                <span style={{ fontWeight: "bolder"}}>
+                <span style={{ fontWeight: "bolder" }}>
                   {comment?.postedBy?.username}{" "}
                 </span>
                 {comment.comment}
