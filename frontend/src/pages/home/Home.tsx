@@ -36,8 +36,8 @@ import {
 } from "../../redux/fetures/Post/postSlice";
 import { formatDate } from "../../utils/Index";
 import { useAppDispatch, useAppSelector } from "../../redux/app/store";
-import CommentInput from "../../components/CommentInput/CommentInput";
-
+import { CommentInput } from "../../components/Index";
+ 
 export default function Home() {
   const { posts } = useAppSelector((state) => state.posts);
   const { user } = useAppSelector((state) => state.auth);

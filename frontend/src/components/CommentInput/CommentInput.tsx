@@ -6,8 +6,8 @@ import { Box, IconButton, TextField, Typography } from "@mui/material";
 import DeleteForeverIcon from "@mui/icons-material/Delete";
 import SendIcon from "@mui/icons-material/Send";
 
-import CommentModal from "../Modals/CommentModal";
 import { IPost } from "../../interfaces/PostInterface";
+import { CommentModal } from "../Index";
 
 type CommentInputProps = {
   post: IPost;
