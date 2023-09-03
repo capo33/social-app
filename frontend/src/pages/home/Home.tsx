@@ -47,7 +47,76 @@ import {
 import { formatDate, subStringFunc } from "../../utils/Index";
 import { useAppDispatch, useAppSelector } from "../../redux/app/store";
 import { IPost } from "../../interfaces/PostInterface";
+import ExpandLessIcon from "@mui/icons-material/ExpandLess";
+import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
+import Modal from "@mui/material/Modal";
 
+const style = {
+  position: "absolute" as "absolute",
+  top: "50%",
+  left: "50%",
+  transform: "translate(-50%, -50%)",
+  width: 800,
+  bgcolor: "background.paper",
+  border: "2px solid #000",
+  boxShadow: 24,
+  p: 4,
+};
+
+function BasicModal({ post, handleDeleteComment }: any) {
+  const [open, setOpen] = React.useState(false);
+  const handleOpen = () => setOpen(true);
+  const handleClose = () => setOpen(false);
+
+  return (
+    <div>
+      {/* Comments Modal if there is more then two comments */}
+      {post?.comments.length > 2 && (
+        <>
+          <Button onClick={handleOpen}>View comments</Button>
+          <Modal
+            open={open}
+            onClose={handleClose}
+            aria-labelledby='modal-modal-title'
+            aria-describedby='modal-modal-description'
+          >
+            <Box sx={style}>
+              {post.comments.map((comment: any) => (
+                <Box
+                  key={comment._id}
+                  sx={{
+                    p: "5px 4px",
+                    display: "flex",
+                    justifyContent: "space-between",
+                    alignItems: "center",
+                    width: "100%",
+                  }}
+                >
+                  <Typography
+                    variant='body2'
+                    color='text.secondary'
+                    sx={{ ml: 2 }}
+                  >
+                    <span style={{ fontWeight: "bolder" }}>
+                      {comment?.postedBy?.username}{" "}
+                    </span>
+                    {comment.comment}
+                  </Typography>
+                  <IconButton
+                    aria-label='delete'
+                    onClick={() => handleDeleteComment(post._id, comment._id)}
+                  >
+                    <DeleteForeverIcon />
+                  </IconButton>
+                </Box>
+              ))}
+            </Box>
+          </Modal>
+        </>
+      )}
+    </div>
+  );
+}
 type PostProps = {
   post: IPost;
   handleComment: (comment: string, id: string) => void;
@@ -64,6 +133,9 @@ function Post({
   toggleComment,
 }: PostProps) {
   const [inputValue, setInputValue] = useState<string>("");
+  const [open, setOpen] = React.useState(false);
+  const handleOpen = () => setOpen(true);
+  const handleClose = () => setOpen(false);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setInputValue(e.target.value);
@@ -92,6 +164,55 @@ function Post({
           <SendIcon />
         </IconButton>
       </Box>
+
+      {/* Comments Modal if there is more then two comments */}
+      {/* {post?.comments.length > 2 && (
+        <>
+          <Button onClick={handleOpen}>View comments</Button>
+          <Modal
+            open={open}
+            onClose={handleClose}
+            aria-labelledby='modal-modal-title'
+            aria-describedby='modal-modal-description'
+          >
+            <Box sx={style}>
+              {post.comments.map((comment: any) => (
+                <Box
+                  key={comment._id}
+                  sx={{
+                    p: "5px 4px",
+                    display: "flex",
+                    justifyContent: "space-between",
+                    alignItems: "center",
+                    width: "100%",
+                  }}
+                >
+                  <Typography
+                    variant='body2'
+                    color='text.secondary'
+                    sx={{ ml: 2 }}
+                  >
+                    <span style={{ fontWeight: "bolder" }}>
+                      {comment?.postedBy?.username}{" "}
+                    </span>
+                    {comment.comment}
+                  </Typography>
+                  <IconButton
+                    aria-label='delete'
+                    onClick={() => handleDeleteComment(post._id, comment._id)}
+                  >
+                    <DeleteForeverIcon />
+                  </IconButton>
+                </Box>
+              ))}
+            </Box>
+          </Modal>
+        </>
+      )} */}
+
+      <BasicModal post={post} handleDeleteComment={handleDeleteComment} />
+
+      {/* Show cooments */}
       {show && (
         <>
           {post.comments.map((comment: any) => (
@@ -121,90 +242,37 @@ function Post({
           ))}
         </>
       )}
-      {/* Toggle comment section depending on the number of comments */}
-      {post?.comments.length > 2 && (
-        <>
-          {show ? (
-            <h6
-              // style={commentStyle}
-              onClick={() => toggleComment()}
-            >
-              <span>Hide Comments</span>
-              <i className='material-icons'>keyboard_arrow_up</i>
-            </h6>
-          ) : (
-            <h6
-              // style={commentStyle}
-              onClick={() => toggleComment()}
-            >
-              <span>
-                {post?.comments?.length > 0
-                  ? "Show Comments"
-                  : "No Comments Yet"}
-              </span>
-              <i className='material-icons'>keyboard_arrow_down</i>
-            </h6>
-          )}
-        </>
-      )}
 
       {/* Show first two comments */}
       {post?.comments.length > 0 && !show && (
         <>
-          {post?.comments.slice(0, 2).map((record) => {
-            return (
-              <h6 key={record._id}>
-                <div
-                  style={{
-                    cursor: "pointer",
-                    display: "flex",
-                    justifyContent: "space-between",
-                    alignItems: "center",
-                  }}
-                >
-                  <span style={{ fontWeight: "bolder" }}>
-                    {record?.postedBy?.username}{" "}
-                  </span>
-                  {record.comment}
-                </div>
-              </h6>
-            );
-          })}
+          {post.comments.slice(0, 2).map((comment: any) => (
+            <Box
+              key={comment._id}
+              sx={{
+                p: "2px 4px",
+                display: "flex",
+                justifyContent: "space-between",
+                alignItems: "center",
+                width: "100%",
+              }}
+            >
+              <Typography variant='body2' color='text.secondary' sx={{ ml: 2 }}>
+                <span style={{ fontWeight: "bolder" }}>
+                  {comment?.postedBy?.username}{" "}
+                </span>
+                {comment.comment}
+              </Typography>
+              <IconButton
+                aria-label='delete'
+                onClick={() => handleDeleteComment(post._id, comment._id)}
+              >
+                <DeleteForeverIcon />
+              </IconButton>
+            </Box>
+          ))}
         </>
       )}
-
-      {/* Show all comments */}
-      {/* {show && (
-        <>
-          {post?.comments.map((record) => {
-            return (
-              <h6 key={record._id}>
-                <div
-                  style={{
-                    cursor: "pointer",
-                    display: "flex",
-                    justifyContent: "space-between",
-                    alignItems: "center",
-                  }}
-                >
-                  <div>
-                    <p>
-                      <span
-                        style={{
-                          marginRight: "1rem ",
-                        }}
-                      >
-                        {record?.postedBy?.username}
-                      </span>
-                      <span>{subStringFunc(record.comment, 20)}</span>
-                    </p>
-                  </div>
-                </div>
-              </h6>
-            );
-          })}
-        </>
-      )} */}
     </Box>
   );
 }
@@ -240,15 +308,6 @@ export default function Home() {
     dispatch(deleteCommentPost({ postId, commentId, token }));
     console.log("postId", postId, "commentId", commentId);
     console.log("token", token);
-  };
-
-  const handleSubmitComment = (
-    e: React.FormEvent<HTMLFormElement>,
-    id: string
-  ) => {
-    handleComment(comment, id);
-    setComment("");
-    // e.currentTarget.value = "";
   };
 
   //  Show and hide comments
