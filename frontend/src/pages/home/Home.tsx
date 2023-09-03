@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { toast } from "react-hot-toast";
 import { Link } from "react-router-dom";
 
@@ -20,7 +20,6 @@ import {
 
 // Material UI Icons
 import { red } from "@mui/material/colors";
-import ChatIcon from "@mui/icons-material/Chat";
 import PublicIcon from "@mui/icons-material/Public";
 import FavoriteIcon from "@mui/icons-material/Favorite";
 import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
@@ -164,7 +163,7 @@ export default function Home() {
                       </IconButton>
                     </CardActions>
                   </Stack>
-                  
+
                   <Typography
                     variant='body2'
                     color='text.secondary'
