@@ -1,14 +1,7 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { toast } from "react-hot-toast";
 import { Link } from "react-router-dom";
 
-import Paper from "@mui/material/Paper";
-import InputBase from "@mui/material/InputBase";
-import Divider from "@mui/material/Divider";
-import MenuIcon from "@mui/icons-material/Menu";
-import SearchIcon from "@mui/icons-material/Search";
-import DirectionsIcon from "@mui/icons-material/Directions";
-import SendIcon from "@mui/icons-material/Send";
 // Material UI
 import {
   Card,
@@ -23,8 +16,6 @@ import {
   Avatar,
   IconButton,
   Stack,
-  Button,
-  TextField,
 } from "@mui/material";
 
 // Material UI Icons
@@ -44,245 +35,13 @@ import {
   likePost,
   unlikePost,
 } from "../../redux/fetures/Post/postSlice";
-import { formatDate, subStringFunc } from "../../utils/Index";
+import { formatDate } from "../../utils/Index";
 import { useAppDispatch, useAppSelector } from "../../redux/app/store";
-import { IPost } from "../../interfaces/PostInterface";
-import ExpandLessIcon from "@mui/icons-material/ExpandLess";
-import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
-import Modal from "@mui/material/Modal";
-
-const style = {
-  position: "absolute" as "absolute",
-  top: "50%",
-  left: "50%",
-  transform: "translate(-50%, -50%)",
-  width: 800,
-  bgcolor: "background.paper",
-  border: "2px solid #000",
-  boxShadow: 24,
-  p: 4,
-};
-
-function BasicModal({ post, handleDeleteComment }: any) {
-  const [open, setOpen] = React.useState(false);
-  const handleOpen = () => setOpen(true);
-  const handleClose = () => setOpen(false);
-
-  return (
-    <div>
-      {/* Comments Modal if there is more then two comments */}
-      {post?.comments.length > 2 && (
-        <>
-          <Button onClick={handleOpen}>View comments</Button>
-          <Modal
-            open={open}
-            onClose={handleClose}
-            aria-labelledby='modal-modal-title'
-            aria-describedby='modal-modal-description'
-          >
-            <Box sx={style}>
-              {post.comments.map((comment: any) => (
-                <Box
-                  key={comment._id}
-                  sx={{
-                    p: "5px 4px",
-                    display: "flex",
-                    justifyContent: "space-between",
-                    alignItems: "center",
-                    width: "100%",
-                  }}
-                >
-                  <Typography
-                    variant='body2'
-                    color='text.secondary'
-                    sx={{ ml: 2 }}
-                  >
-                    <span style={{ fontWeight: "bolder" }}>
-                      {comment?.postedBy?.username}{" "}
-                    </span>
-                    {comment.comment}
-                  </Typography>
-                  <IconButton
-                    aria-label='delete'
-                    onClick={() => handleDeleteComment(post._id, comment._id)}
-                  >
-                    <DeleteForeverIcon />
-                  </IconButton>
-                </Box>
-              ))}
-            </Box>
-          </Modal>
-        </>
-      )}
-    </div>
-  );
-}
-type PostProps = {
-  post: IPost;
-  handleComment: (comment: string, id: string) => void;
-  handleDeleteComment: (postId: string, commentId: string) => void;
-  show: boolean;
-  toggleComment: () => void;
-};
-
-function Post({
-  post,
-  handleComment,
-  handleDeleteComment,
-  show,
-  toggleComment,
-}: PostProps) {
-  const [inputValue, setInputValue] = useState<string>("");
-  const [open, setOpen] = React.useState(false);
-  const handleOpen = () => setOpen(true);
-  const handleClose = () => setOpen(false);
-
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setInputValue(e.target.value);
-  };
-
-  return (
-    <Box>
-      <Box sx={{ display: "flex", justifyContent: "space-between" }}>
-        <TextField
-          sx={{ ml: 2, width: "100%" }}
-          variant='standard'
-          placeholder='Add a comment...'
-          inputProps={{ "aria-label": "Add a comment..." }}
-          value={inputValue}
-          onChange={handleChange}
-        />
-        <IconButton
-          type='button'
-          sx={{ p: "10px" }}
-          aria-label='search'
-          onClick={() => {
-            handleComment(inputValue, post._id);
-            setInputValue("");
-          }}
-        >
-          <SendIcon />
-        </IconButton>
-      </Box>
-
-      {/* Comments Modal if there is more then two comments */}
-      {/* {post?.comments.length > 2 && (
-        <>
-          <Button onClick={handleOpen}>View comments</Button>
-          <Modal
-            open={open}
-            onClose={handleClose}
-            aria-labelledby='modal-modal-title'
-            aria-describedby='modal-modal-description'
-          >
-            <Box sx={style}>
-              {post.comments.map((comment: any) => (
-                <Box
-                  key={comment._id}
-                  sx={{
-                    p: "5px 4px",
-                    display: "flex",
-                    justifyContent: "space-between",
-                    alignItems: "center",
-                    width: "100%",
-                  }}
-                >
-                  <Typography
-                    variant='body2'
-                    color='text.secondary'
-                    sx={{ ml: 2 }}
-                  >
-                    <span style={{ fontWeight: "bolder" }}>
-                      {comment?.postedBy?.username}{" "}
-                    </span>
-                    {comment.comment}
-                  </Typography>
-                  <IconButton
-                    aria-label='delete'
-                    onClick={() => handleDeleteComment(post._id, comment._id)}
-                  >
-                    <DeleteForeverIcon />
-                  </IconButton>
-                </Box>
-              ))}
-            </Box>
-          </Modal>
-        </>
-      )} */}
-
-      <BasicModal post={post} handleDeleteComment={handleDeleteComment} />
-
-      {/* Show cooments */}
-      {show && (
-        <>
-          {post.comments.map((comment: any) => (
-            <Box
-              key={comment._id}
-              sx={{
-                p: "2px 4px",
-                display: "flex",
-                justifyContent: "space-between",
-                alignItems: "center",
-                width: "100%",
-              }}
-            >
-              <Typography variant='body2' color='text.secondary' sx={{ ml: 2 }}>
-                <span style={{ fontWeight: "bolder" }}>
-                  {comment?.postedBy?.username}{" "}
-                </span>
-                {comment.comment}
-              </Typography>
-              <IconButton
-                aria-label='delete'
-                onClick={() => handleDeleteComment(post._id, comment._id)}
-              >
-                <DeleteForeverIcon />
-              </IconButton>
-            </Box>
-          ))}
-        </>
-      )}
-
-      {/* Show first two comments */}
-      {post?.comments.length > 0 && !show && (
-        <>
-          {post.comments.slice(0, 2).map((comment: any) => (
-            <Box
-              key={comment._id}
-              sx={{
-                p: "2px 4px",
-                display: "flex",
-                justifyContent: "space-between",
-                alignItems: "center",
-                width: "100%",
-              }}
-            >
-              <Typography variant='body2' color='text.secondary' sx={{ ml: 2 }}>
-                <span style={{ fontWeight: "bolder" }}>
-                  {comment?.postedBy?.username}{" "}
-                </span>
-                {comment.comment}
-              </Typography>
-              <IconButton
-                aria-label='delete'
-                onClick={() => handleDeleteComment(post._id, comment._id)}
-              >
-                <DeleteForeverIcon />
-              </IconButton>
-            </Box>
-          ))}
-        </>
-      )}
-    </Box>
-  );
-}
+import CommentInput from "../../components/CommentInput/CommentInput";
 
 export default function Home() {
   const { posts } = useAppSelector((state) => state.posts);
   const { user } = useAppSelector((state) => state.auth);
-
-  const [comment, setComment] = useState("");
-  const [show, setShow] = useState(false);
 
   const dispatch = useAppDispatch();
   const token = user?.token as string;
@@ -291,32 +50,24 @@ export default function Home() {
     dispatch(getAllPosts());
   }, [dispatch]);
 
+  // Like post
   const handleLike = async (id: string) => {
     dispatch(likePost({ postId: id, token }));
   };
 
+  // Unlike post
   const handleUnlike = async (id: string) => {
     dispatch(unlikePost({ postId: id, token }));
   };
 
+  // Comment post
   const handleComment = (comment: string, id: string) => {
     dispatch(commentPost({ comment, postId: id, token }));
-    setComment("");
   };
 
+  // Delete comment
   const handleDeleteComment = (postId: string, commentId: string) => {
     dispatch(deleteCommentPost({ postId, commentId, token }));
-    console.log("postId", postId, "commentId", commentId);
-    console.log("token", token);
-  };
-
-  //  Show and hide comments
-  const toggleComment = () => {
-    if (show) {
-      setShow(false);
-    } else {
-      setShow(true);
-    }
   };
 
   return (
@@ -341,7 +92,6 @@ export default function Home() {
               <Grid item key={post?._id} xs={12} sm={6}>
                 <Card>
                   {/* Navigate to my own profile or to the other user profile */}
-
                   <CardHeader
                     avatar={
                       <Link
@@ -371,6 +121,7 @@ export default function Home() {
                     subheader={formatDate(post?.createdAt)}
                   />
 
+                  {/* Image */}
                   <CardMedia
                     component='img'
                     height='194'
@@ -382,6 +133,7 @@ export default function Home() {
                       {post?.description}
                     </Typography>
                   </CardContent>
+
                   <Stack
                     direction='row'
                     justifyContent='space-between'
@@ -405,10 +157,6 @@ export default function Home() {
                           <FavoriteBorderIcon />
                         </IconButton>
                       )}
-
-                      <IconButton aria-label='share'>
-                        <ChatIcon />
-                      </IconButton>
                     </CardActions>
                     <CardActions disableSpacing>
                       <IconButton aria-label='Save'>
@@ -416,6 +164,7 @@ export default function Home() {
                       </IconButton>
                     </CardActions>
                   </Stack>
+                  
                   <Typography
                     variant='body2'
                     color='text.secondary'
@@ -426,9 +175,7 @@ export default function Home() {
                   </Typography>
 
                   {/* Add Comments */}
-                  <Post
-                    show={show}
-                    toggleComment={toggleComment}
+                  <CommentInput
                     post={post}
                     handleComment={handleComment}
                     handleDeleteComment={handleDeleteComment}
