@@ -1,11 +1,11 @@
-import * as React from "react";
-import Box from "@mui/material/Box";
-import Button from "@mui/material/Button";
-import Typography from "@mui/material/Typography";
-import Modal from "@mui/material/Modal";
-import { IPost } from "../../interfaces/PostInterface";
-import { IconButton } from "@mui/material";
+import { useState } from "react";
+
+// Material UI
+import { Box, Typography, Modal, IconButton } from "@mui/material";
+// Material UI Icons
 import DeleteForeverIcon from "@mui/icons-material/Delete";
+
+import { IPost } from "../../interfaces/PostInterface";
 
 const style = {
   position: "absolute" as "absolute",
@@ -28,23 +28,22 @@ export default function CommentModal({
   post,
   handleDeleteComment,
 }: CommentModalProps) {
-  const [open, setOpen] = React.useState(false);
+  const [open, setOpen] = useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
 
   return (
-    <div>
+    <Box component={"div"}>
       {/* Comments Modal if there is more then two comments */}
       {post?.comments.length > 2 && (
         <>
-          <Button 
-          onClick={handleOpen} 
-          sx={{ ml: 2 }}
-           color="warning"
-          
+          <Box
+            onClick={handleOpen}
+            sx={{ ml: 2, cursor: "pointer" }}
+            color='#2196f3'
           >
             View all {post?.comments.length} comments...
-          </Button>
+          </Box>
           <Modal
             open={open}
             onClose={handleClose}
@@ -85,6 +84,6 @@ export default function CommentModal({
           </Modal>
         </>
       )}
-    </div>
+    </Box>
   );
 }
