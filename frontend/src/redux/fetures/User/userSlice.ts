@@ -78,7 +78,68 @@ export const userProfileById = createAsyncThunk(
   }
 );
 
-export const authSlice = createSlice({
+// Follow user
+
+export const followUser = createAsyncThunk(
+  "auth/followUser",
+  async (
+    {
+      followId,
+      userId,
+      token,
+    }: { followId: string; userId: string; token: string },
+   
+    thunkAPI
+  ) => {
+    try {
+      const response = await userServices.followUser(followId, userId, token);
+      thunkAPI.dispatch(userProfile(token));
+      thunkAPI.dispatch(userProfileById(followId));
+      return response;
+    } catch (error: unknown | any) {
+      const message =
+        (error.response &&
+          error.response.data &&
+          error.response.data.message) ||
+        error.message ||
+        error.toString();
+      return thunkAPI.rejectWithValue(message);
+    }
+  }
+);
+
+// Unfollow user
+
+export const unfollowUser = createAsyncThunk(
+  "auth/unfollowUser",
+  async (
+    {
+      followId,
+      userId,
+      token,
+    }: { followId: string; userId: string; token: string },
+    thunkAPI
+  ) => {
+    try {
+      const response = await userServices.unfollowUser(followId, userId, token);
+      thunkAPI.dispatch(userProfile(token));
+      thunkAPI.dispatch(userProfileById(followId));
+
+      return response;
+    } catch (error: unknown | any) {
+      const message =
+        (error.response &&
+          error.response.data &&
+          error.response.data.message) ||
+        error.message ||
+        error.toString();
+      return thunkAPI.rejectWithValue(message);
+    }
+  }
+);
+
+
+export const userSlice = createSlice({
   name: "user",
   initialState,
   reducers: {},
@@ -127,7 +188,22 @@ export const authSlice = createSlice({
       state.isError = true;
       state.message = payload as string;
     });
+
+    // Follow user
+    builder.addCase(followUser.pending, (state) => {
+      state.isLoading = true;
+    });
+    builder.addCase(followUser.fulfilled, (state, { payload }) => {
+      state.isLoading = false;
+      state.isSuccess = true;
+      state.user = payload;
+    });
+    builder.addCase(followUser.rejected, (state, { payload }) => {
+      state.isLoading = false;
+      state.isError = true;
+      state.message = payload as string;
+    });
   },
 });
 
-export default authSlice.reducer;
+export default userSlice.reducer;

@@ -14,9 +14,13 @@ import {
 } from "@mui/material";
 
 // Material Icon
- 
+import SettingsIcon from "@mui/icons-material/Settings";
+
 import {
-   userProfileById,
+  followUser,
+  unfollowUser,
+  userProfile,
+  userProfileById,
 } from "../../redux/fetures/User/userSlice";
 import { getAllPosts } from "../../redux/fetures/Post/postSlice";
 import { useAppSelector, useAppDispatch } from "../../redux/app/store";
@@ -24,8 +28,22 @@ import { useAppSelector, useAppDispatch } from "../../redux/app/store";
 function UserProfile() {
   const { id } = useParams<{ id: string }>();
 
-  const { guest } = useAppSelector((state) => state.user);
-  console.log(guest?.user);
+  const { guest, user: me } = useAppSelector((state) => state.user);
+  const { user } = useAppSelector((state) => state.auth);
+
+  //  console.log(user?.username);
+  // console.log('guest',guest);
+  // console.log("user", user);
+  // console.log("me", me);
+  // console.log(guest?.user?.followers?.includes(me?._id as string));
+  // console.log(user?.followers?.includes(guest?.user?._id as string));
+  const followerMap = guest?.user?.followers?.map(
+    (follower: any) => follower._id as string
+  );
+  console.log(followerMap?.includes(user?._id as string));
+  console.log(user?._id);
+  console.log(guest?.user?.followers);
+  console.log(guest?.user?.followers?.includes(user?._id as string));
 
   const dispatch = useAppDispatch();
 
@@ -36,6 +54,34 @@ function UserProfile() {
   useEffect(() => {
     dispatch(userProfileById(id as string));
   }, [dispatch, id]);
+
+  useEffect(() => {
+    if (user) {
+      dispatch(userProfile(user?.token as string));
+    }
+  }, [dispatch, user]);
+
+  // Like post
+  const handFollow = async (id: string) => {
+    dispatch(
+      followUser({
+        followId: id as string,
+        userId: guest?.user._id as string,
+        token: user?.token as string,
+      })
+    );
+  };
+
+  // Unlike post
+  const handleUnfollow = async (id: string) => {
+    dispatch(
+      unfollowUser({
+        followId: id as string,
+        userId: me?._id as string,
+        token: user?.token as string,
+      })
+    );
+  };
 
   return (
     <Container sx={{ my: 10 }}>
@@ -69,10 +115,35 @@ function UserProfile() {
             <Typography variant='body1'>@{guest?.user?.username}</Typography>
 
             {/* Follow & UnFollow */}
-            <Link to='/update-profile'>
-              <Button variant='contained' color='info'></Button>
-              <Button variant='contained' color='info'></Button>
-            </Link>
+            {followerMap?.includes(user?._id as string) ? (
+              <Button
+                variant='contained'
+                color='primary'
+                onClick={() => handleUnfollow(guest?.user?._id as string)}
+              >
+                Unfollow
+              </Button>
+            ) : (
+              <Button
+                variant='contained'
+                color='primary'
+                onClick={() => handFollow(guest?.user?._id as string)}
+              >
+                Follow
+              </Button>
+            )}
+            {/* <Link to='/update-profile'>
+              <Button
+                variant='contained'
+                color='info'
+                // onClick={() => dispatch(follo({}))}
+              >
+                follow
+              </Button>
+              <Button variant='contained' color='info'>
+                unfollow
+              </Button>
+            </Link> */}
           </div>
         </Box>
         <Typography variant='body2' sx={{ mb: 1 }}>
@@ -116,11 +187,12 @@ function UserProfile() {
                 <Card>
                   <img
                     src={post.image}
-                    alt={`Post ${post._id}`}
+                    alt={post.title}
                     style={{ width: "100%", height: "auto" }}
+                    loading='lazy'
                   />
                   <CardContent>
-                    <Typography variant='body2'>{post.title}</Typography>
+                    <Typography variant='body2'>{post.description}</Typography>
                   </CardContent>
                 </Card>
               </Grid>
