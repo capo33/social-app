@@ -33,7 +33,7 @@ const deletePost = async (postId: string, token: string) => {
     },
   });
   console.log(response.data);
-  
+
   return response.data;
 };
 
@@ -96,7 +96,7 @@ const deleteComment = async (
     }
   );
   console.log(rsponse.data);
-  
+
   return rsponse.data;
 };
 
@@ -104,6 +104,46 @@ const deleteComment = async (
 
 const myPosts = async (token: string) => {
   const response = await axios.get(`${POST_URL}/my-posts`, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+  return response.data;
+};
+
+// Saved Posts
+const savedPosts = async (postId: string, userId: string, token: string) => {
+  const response = await axios.put(
+    `${POST_URL}/save`,
+    { postId, userId },
+    {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    }
+  );
+
+  return response.data;
+};
+
+// Unsaved Posts
+const unsavedPosts = async (postId: string, userId: string, token: string) => {
+  const response = await axios.put(
+    `${POST_URL}/unsave`,
+    { postId, userId },
+    {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    }
+  );
+
+  return response.data;
+};
+
+// Get saved posts
+const getSavedPosts = async (userId: string, token: string) => {
+  const response = await axios.get(`${POST_URL}/saved-posts/ids/${userId}`, {
     headers: {
       Authorization: `Bearer ${token}`,
     },
@@ -121,6 +161,9 @@ const postServices = {
   commentPost,
   deleteComment,
   myPosts,
+  savedPosts,
+  unsavedPosts,
+  getSavedPosts,
 };
 
 export default postServices;
