@@ -5,6 +5,7 @@ import { IPost, IPostCreate } from "../../../interfaces/PostInterface";
 
 interface PostState {
   posts: IPost[];
+  savedPosts: IPost[];
   post: IPost;
   isError: boolean;
   isSuccess: boolean;
@@ -14,6 +15,7 @@ interface PostState {
 
 const initialState: PostState = {
   posts: [],
+  savedPosts: [],
   post: {
     _id: "",
     title: "",
@@ -263,6 +265,79 @@ export const myPosts = createAsyncThunk(
   }
 );
 
+// Save post
+export const savePost = createAsyncThunk(
+  "posts/savePost",
+  async (
+    {
+      postId,
+      userId,
+      token,
+    }: { postId: string; userId: string; token: string },
+    thunkAPI
+  ) => {
+    try {
+      const response = await postServices.savePost(postId, userId, token);
+      thunkAPI.dispatch(getAllPosts());
+      return response;
+    } catch (error: unknown | any) {
+      const message =
+        (error.response &&
+          error.response.data &&
+          error.response.data.message) ||
+        error.message ||
+        error.toString();
+      return thunkAPI.rejectWithValue(message);
+    }
+  }
+);
+
+// Unsave post
+export const unsavePost = createAsyncThunk(
+  "posts/unsavePost",
+  async (
+    {
+      postId,
+      userId,
+      token,
+    }: { postId: string; userId: string; token: string },
+    thunkAPI
+  ) => {
+    try {
+      const response = await postServices.unsavePost(postId, userId, token);
+      thunkAPI.dispatch(getAllPosts());
+      return response;
+    } catch (error: unknown | any) {
+      const message =
+        (error.response &&
+          error.response.data &&
+          error.response.data.message) ||
+        error.message ||
+        error.toString();
+      return thunkAPI.rejectWithValue(message);
+    }
+  }
+);
+
+// Get saved posts
+export const getSavedPosts = createAsyncThunk(
+  "posts/getSavedPosts",
+  async ({ userId, token }: { userId: string; token: string }, thunkAPI) => {
+    try {
+      const response = await postServices.getSavedPosts(userId, token);
+      return response;
+    } catch (error: unknown | any) {
+      const message =
+        (error.response &&
+          error.response.data &&
+          error.response.data.message) ||
+        error.message ||
+        error.toString();
+      return thunkAPI.rejectWithValue(message);
+    }
+  }
+);
+
 const postSlice = createSlice({
   name: "posts",
   initialState,
@@ -423,6 +498,48 @@ const postSlice = createSlice({
       state.posts = payload.data;
     });
     builder.addCase(myPosts.rejected, (state, { payload }) => {
+      state.isLoading = false;
+      state.isError = true;
+      state.message = payload as string;
+    });
+
+    // save post
+    builder.addCase(savePost.pending, (state) => {
+      state.isLoading = true;
+    });
+    builder.addCase(savePost.fulfilled, (state, { payload }) => {
+      state.isLoading = false;
+      state.isSuccess = true;
+      const newdata = state.posts.map((post: IPost) => {
+        if (post?._id === payload?.data?._id) {
+          return payload?.data;
+        }
+        return post;
+      });
+      state.savedPosts = newdata;
+    });
+    builder.addCase(savePost.rejected, (state, { payload }) => {
+      state.isLoading = false;
+      state.isError = true;
+      state.message = payload as string;
+    });
+
+    // unsave post
+    builder.addCase(unsavePost.pending, (state) => {
+      state.isLoading = true;
+    });
+    builder.addCase(unsavePost.fulfilled, (state, { payload }) => {
+      state.isLoading = false;
+      state.isSuccess = true;
+      const newdata = state.posts.map((post: IPost) => {
+        if (post?._id === payload?.data?._id) {
+          return payload?.data;
+        }
+        return post;
+      });
+      state.savedPosts = newdata;
+    });
+    builder.addCase(unsavePost.rejected, (state, { payload }) => {
       state.isLoading = false;
       state.isError = true;
       state.message = payload as string;

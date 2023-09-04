@@ -112,7 +112,7 @@ const myPosts = async (token: string) => {
 };
 
 // Saved Posts
-const savedPosts = async (postId: string, userId: string, token: string) => {
+const savePost = async (postId: string, userId: string, token: string) => {
   const response = await axios.put(
     `${POST_URL}/save`,
     { postId, userId },
@@ -127,7 +127,7 @@ const savedPosts = async (postId: string, userId: string, token: string) => {
 };
 
 // Unsaved Posts
-const unsavedPosts = async (postId: string, userId: string, token: string) => {
+const unsavePost = async (postId: string, userId: string, token: string) => {
   const response = await axios.put(
     `${POST_URL}/unsave`,
     { postId, userId },
@@ -161,8 +161,8 @@ const postServices = {
   commentPost,
   deleteComment,
   myPosts,
-  savedPosts,
-  unsavedPosts,
+  savePost,
+  unsavePost,
   getSavedPosts,
 };
 
