@@ -18,6 +18,7 @@ export interface IUser extends Document {
   notifications: NotificationType[];
   seenNotifications: NotificationType[];
   image: string;
+  savedPosts: Types.ObjectId[];
   createdAt: Date;
   updatedAt: Date;
 }

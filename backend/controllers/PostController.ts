@@ -1,6 +1,7 @@
 import { Request, Response } from "express";
 
 import PostModel from "../models/Post";
+import UserModel from "../models/User";
 
 // @desc    Get all posts
 // @route   GET /api/v1/posts
@@ -235,6 +236,106 @@ const deletePost = async (req: Request, res: Response): Promise<void> => {
   }
 };
 
+// @desc    Save a post
+// @route   PUT /api/v1/posts/save
+// @access  Private
+const savePost = async (req: Request, res: Response): Promise<void> => {
+  try {
+    // Check if the user is logged in
+    if (!req?.user) {
+      res.status(401);
+      throw new Error("Not authorized");
+    }
+
+    const post = await PostModel.findById(req.body.postId).populate(
+      "postedBy",
+      "_id name"
+    );
+
+    if (!post) {
+      res.status(404);
+      throw new Error("Post not found");
+    }
+
+    const user = await UserModel.findById(req.body.userId);
+
+    // Check if the user has already saved the post
+    const isSaved = user?.savedPosts?.includes(post._id);
+
+    if (isSaved) {
+      res.status(400);
+      throw new Error("Post already saved");
+    }
+
+    await UserModel.findByIdAndUpdate(
+      req?.body.userId,
+      {
+        $push: { savedPosts: post._id },
+      },
+      { new: true } // to return the updated document
+    );
+
+    res.status(200).json({
+      message: "Post saved successfully",
+      savedPosts: user?.savedPosts,
+      savePostsCount: user?.savedPosts?.length,
+    });
+  } catch (error) {
+    if (error instanceof Error)
+      res.status(400).json({ message: error.message });
+  }
+};
+
+// @desc    Usaved post
+// @route   PUT /api/v1/posts/unsave
+// @access  Private
+const unsavePost = async (req: Request, res: Response): Promise<void> => {
+  try {
+    // Check if the user is logged in
+    if (!req?.user) {
+      res.status(401);
+      throw new Error("Not authorized");
+    }
+
+    const user = await UserModel.findById(req.body.userId);
+
+    const post = await PostModel.findById(req.body.postId).populate(
+      "postedBy",
+      "_id name"
+    );
+
+    if (!post) {
+      res.status(404);
+      throw new Error("Post not found");
+    }
+
+    // Check if the user has already saved the post
+    const isSaved = user?.savedPosts?.includes(post._id);
+
+    if (isSaved) {
+      res.status(400);
+      throw new Error("Post already saved");
+    }
+
+    await UserModel.findByIdAndUpdate(
+      req?.body.userId,
+      {
+        $pull: { savedPosts: post._id },
+      },
+      { new: true } // to return the updated document
+    );
+
+    res.status(200).json({
+      message: "Post unsaved successfully",
+      savedPosts: user?.savedPosts,
+      savePostsCount: user?.savedPosts?.length,
+    });
+  } catch (error) {
+    if (error instanceof Error)
+      res.status(400).json({ message: error.message });
+  }
+};
+
 export {
   getPosts,
   getPost,
@@ -245,4 +346,6 @@ export {
   commentPost,
   deleteComment,
   deletePost,
+  savePost,
+  unsavePost,
 };
