@@ -18,12 +18,13 @@ import HomeIcon from "@mui/icons-material/Home";
 import MenuIcon from "@mui/icons-material/Menu";
 import LogoutIcon from "@mui/icons-material/Logout";
 import BookmarkIcon from "@mui/icons-material/Bookmark";
-import AddCircleIcon from '@mui/icons-material/AddCircle';
+import AddCircleIcon from "@mui/icons-material/AddCircle";
 import NotificationsIcon from "@mui/icons-material/Notifications";
 
 import { Link, useNavigate } from "react-router-dom";
 import { logout } from "../../redux/fetures/Auth/authSlice";
 import { useAppSelector, useAppDispatch } from "../../redux/app/store";
+import { userProfile } from "../../redux/fetures/User/userSlice";
 
 const drawerWidth = 240;
 
@@ -33,11 +34,20 @@ interface Props {
 
 export default function Sidebar(props: Props) {
   const [mobileOpen, setMobileOpen] = React.useState(false);
+
   const { user } = useAppSelector((state) => state.auth);
+  const { user: userAfterUpdate } = useAppSelector((state) => state.user);
+
   const { window } = props;
 
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
+
+  React.useEffect(() => {
+    if (user) {
+      dispatch(userProfile(user.token));
+    }
+  }, [user, dispatch]);
 
   const handleDrawerToggle = () => {
     setMobileOpen(!mobileOpen);
@@ -72,7 +82,9 @@ export default function Sidebar(props: Props) {
     },
     {
       label: "Profile",
-      icon: <Avatar sx={{ width: 30, height: 30 }} />,
+      icon: (
+        <Avatar sx={{ width: 30, height: 30 }} src={userAfterUpdate?.image} />
+      ),
       path: "/profile",
     },
     {
@@ -111,9 +123,9 @@ export default function Sidebar(props: Props) {
             key={link.label}
             onClick={link.onClick}
           >
-              <Link to={link.path}>
-            <ListItem>
-              <ListItemIcon>{link.icon}</ListItemIcon>
+            <Link to={link.path}>
+              <ListItem>
+                <ListItemIcon>{link.icon}</ListItemIcon>
                 <ListItemText
                   primary={link.label}
                   sx={{
@@ -121,8 +133,8 @@ export default function Sidebar(props: Props) {
                     justifyContent: "space-between",
                   }}
                 />
-            </ListItem>
-              </Link>
+              </ListItem>
+            </Link>
           </List>
         ))}
     </Box>
