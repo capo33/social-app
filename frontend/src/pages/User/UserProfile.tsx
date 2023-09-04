@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import { Link, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 // Material Ui
 import {
   Box,
@@ -14,7 +14,6 @@ import {
 } from "@mui/material";
 
 // Material Icon
-import SettingsIcon from "@mui/icons-material/Settings";
 
 import {
   followUser,
@@ -28,22 +27,12 @@ import { useAppSelector, useAppDispatch } from "../../redux/app/store";
 function UserProfile() {
   const { id } = useParams<{ id: string }>();
 
-  const { guest, user: me } = useAppSelector((state) => state.user);
   const { user } = useAppSelector((state) => state.auth);
+  const { guest, user: me } = useAppSelector((state) => state.user);
 
-  //  console.log(user?.username);
-  // console.log('guest',guest);
-  // console.log("user", user);
-  // console.log("me", me);
-  // console.log(guest?.user?.followers?.includes(me?._id as string));
-  // console.log(user?.followers?.includes(guest?.user?._id as string));
   const followerMap = guest?.user?.followers?.map(
     (follower: any) => follower._id as string
   );
-  console.log(followerMap?.includes(user?._id as string));
-  console.log(user?._id);
-  console.log(guest?.user?.followers);
-  console.log(guest?.user?.followers?.includes(user?._id as string));
 
   const dispatch = useAppDispatch();
 
@@ -110,7 +99,7 @@ function UserProfile() {
               mr: 3,
             }}
           />
-          <div>
+          <Box component={'div'}>
             <Typography variant='h5'>{guest?.user?.username}</Typography>
             <Typography variant='body1'>@{guest?.user?.username}</Typography>
 
@@ -132,20 +121,9 @@ function UserProfile() {
                 Follow
               </Button>
             )}
-            {/* <Link to='/update-profile'>
-              <Button
-                variant='contained'
-                color='info'
-                // onClick={() => dispatch(follo({}))}
-              >
-                follow
-              </Button>
-              <Button variant='contained' color='info'>
-                unfollow
-              </Button>
-            </Link> */}
-          </div>
+          </Box>
         </Box>
+        
         <Typography variant='body2' sx={{ mb: 1 }}>
           {guest?.user?.bio ? `Bio: ${guest?.user?.bio}` : "No Bio"}
         </Typography>
