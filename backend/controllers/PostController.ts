@@ -336,6 +336,27 @@ const unsavePost = async (req: Request, res: Response): Promise<void> => {
   }
 };
 
+// @desc    Get saved posts
+// @route   GET /api/v1/posts/saved-posts/ids/:id
+// @access  Private
+const getSavedPosts = async (req: Request, res: Response): Promise<void> => {
+  try {
+    const { id } = req.params; // user id
+    const user = await UserModel.findById(id)
+      .populate("savedPosts", "_id title description image tags")
+      .select("savedPosts");
+
+    const savedPosts = await PostModel.find({ _id: { $in: user?.savedPosts } })
+      .populate("postedBy", "_id name")
+      .populate("comments.postedBy", "_id name");
+
+    res.status(200).json({savedPosts});
+  } catch (error) {
+    if (error instanceof Error)
+      res.status(400).json({ message: error.message });
+  }
+};
+
 export {
   getPosts,
   getPost,
@@ -348,4 +369,5 @@ export {
   deletePost,
   savePost,
   unsavePost,
+  getSavedPosts,
 };
