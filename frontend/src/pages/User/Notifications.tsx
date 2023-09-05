@@ -34,12 +34,13 @@ const Notifications = () => {
       {user?.notifications?.length === 0 && (
         <Alert severity='success'>You have no notifications</Alert>
       )}
-      <Paper sx={{ width: "100%", overflow: "hidden" }}>
-        <TableContainer sx={{ maxHeight: 440 }}>
-          <Table stickyHeader aria-label='sticky table'>
-            <TableHead>
-              <TableRow>
-                {user?.notifications?.map((notification) => (
+      {user?.notifications?.length !== 0 && (
+        <Paper sx={{ width: "100%", overflow: "hidden" }}>
+          <TableContainer sx={{ maxHeight: 440 }}>
+            <Table stickyHeader aria-label='sticky table'>
+              <TableHead>
+                <TableRow>
+                  {/* {user?.notifications?.map((notification) => (
                   <TableCell
                     key={notification._id}
                     align={"left"}
@@ -47,30 +48,37 @@ const Notifications = () => {
                   >
                     {notification.title}
                   </TableCell>
-                ))}
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {user?.notifications?.map((notification) => {
-                return (
-                  <TableRow
-                    hover
-                    role='checkbox'
-                    tabIndex={-1}
-                    key={notification._id}
+                ))} */}
+                  <TableCell
+                    align={"left"}
+                    style={{ minWidth: 170, textAlign: "center" }}
                   >
-                    <TableCell align={"left"} style={{ minWidth: 170 }}>
-                      <Link to={`/profile/${notification._id}`}>
-                        {notification.description}
-                      </Link>
-                    </TableCell>
-                  </TableRow>
-                );
-              })}
-            </TableBody>
-          </Table>
-        </TableContainer>
-      </Paper>
+                    Actions
+                  </TableCell>
+                </TableRow>
+              </TableHead>
+              <TableBody>
+                {user?.notifications?.map((notification) => {
+                  return (
+                    <TableRow
+                      hover
+                      role='checkbox'
+                      tabIndex={-1}
+                      key={notification._id}
+                    >
+                      <TableCell align={"left"} style={{ minWidth: 170 }}>
+                        <Link to={`/profile/${notification._id}`}>
+                          {notification.description}
+                        </Link>
+                      </TableCell>
+                    </TableRow>
+                  );
+                })}
+              </TableBody>
+            </Table>
+          </TableContainer>
+        </Paper>
+      )}
     </Container>
   );
 };
