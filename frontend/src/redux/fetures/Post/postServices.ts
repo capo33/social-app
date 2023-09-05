@@ -122,8 +122,14 @@ const savePost = async (postId: string, userId: string, token: string) => {
       },
     }
   );
+<<<<<<< HEAD
+console.log(response.data?.savedPosts);
+
+  return response.data?.savedPosts;
+=======
 
   return response.data;
+>>>>>>> 0098bee24d3f0aedadf8e626edd42bfbe57a4104
 };
 
 // Unsaved Posts
@@ -138,7 +144,11 @@ const unsavePost = async (postId: string, userId: string, token: string) => {
     }
   );
 
+<<<<<<< HEAD
+  return response.data?.savedPosts;
+=======
   return response.data;
+>>>>>>> 0098bee24d3f0aedadf8e626edd42bfbe57a4104
 };
 
 // Get saved posts
@@ -148,7 +158,13 @@ const getSavedPosts = async (userId: string, token: string) => {
       Authorization: `Bearer ${token}`,
     },
   });
+<<<<<<< HEAD
+  console.log(response.data.savedPosts);
+  
+  return response.data.savedPosts
+=======
   return response.data;
+>>>>>>> 0098bee24d3f0aedadf8e626edd42bfbe57a4104
 };
 
 const postServices = {

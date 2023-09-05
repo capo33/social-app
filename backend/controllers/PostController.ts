@@ -309,6 +309,15 @@ const unsavePost = async (req: Request, res: Response): Promise<void> => {
       throw new Error("Post not found");
     }
 
+<<<<<<< HEAD
+    // // Check if the user has already saved the post
+    // const isSaved = user?.savedPosts?.includes(post._id);
+
+    // if (isSaved) {
+    //   res.status(400);
+    //   throw new Error("Post already saved");
+    // }
+=======
     // Check if the user has already saved the post
     const isSaved = user?.savedPosts?.includes(post._id);
 
@@ -316,6 +325,7 @@ const unsavePost = async (req: Request, res: Response): Promise<void> => {
       res.status(400);
       throw new Error("Post already saved");
     }
+>>>>>>> 0098bee24d3f0aedadf8e626edd42bfbe57a4104
 
     await UserModel.findByIdAndUpdate(
       req?.body.userId,
@@ -350,7 +360,11 @@ const getSavedPosts = async (req: Request, res: Response): Promise<void> => {
       .populate("postedBy", "_id name")
       .populate("comments.postedBy", "_id name");
 
+<<<<<<< HEAD
+    res.status(200).json({ savedPosts });
+=======
     res.status(200).json({savedPosts});
+>>>>>>> 0098bee24d3f0aedadf8e626edd42bfbe57a4104
   } catch (error) {
     if (error instanceof Error)
       res.status(400).json({ message: error.message });

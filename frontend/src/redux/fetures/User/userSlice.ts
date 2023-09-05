@@ -88,7 +88,11 @@ export const followUser = createAsyncThunk(
       userId,
       token,
     }: { followId: string; userId: string; token: string },
+<<<<<<< HEAD
+
+=======
    
+>>>>>>> 0098bee24d3f0aedadf8e626edd42bfbe57a4104
     thunkAPI
   ) => {
     try {
@@ -138,6 +142,27 @@ export const unfollowUser = createAsyncThunk(
   }
 );
 
+<<<<<<< HEAD
+// Get notifications
+export const getNotifications = createAsyncThunk(
+  "auth/getNotifications",
+  async (token: string, { rejectWithValue }) => {
+    try {
+      const response = await userServices.getNotifications(token);
+      return response;
+    } catch (error: unknown | any) {
+      const message =
+        (error.response &&
+          error.response.data &&
+          error.response.data.message) ||
+        error.message ||
+        error.toString();
+      return rejectWithValue(message);
+    }
+  }
+);
+=======
+>>>>>>> 0098bee24d3f0aedadf8e626edd42bfbe57a4104
 
 export const userSlice = createSlice({
   name: "user",
@@ -203,6 +228,34 @@ export const userSlice = createSlice({
       state.isError = true;
       state.message = payload as string;
     });
+<<<<<<< HEAD
+
+    // Unfollow user
+    builder.addCase(unfollowUser.pending, (state) => {
+      state.isLoading = true;
+    });
+    builder.addCase(unfollowUser.fulfilled, (state, { payload }) => {
+      state.isLoading = false;
+      state.isSuccess = true;
+      state.user = payload;
+    });
+    builder.addCase(unfollowUser.rejected, (state, { payload }) => {
+      state.isLoading = false;
+      state.isError = true;
+      state.message = payload as string;
+    });
+
+    // Get notifications
+    builder.addCase(getNotifications.pending, (state) => {
+      state.isLoading = true;
+    });
+    builder.addCase(getNotifications.fulfilled, (state, { payload }) => {
+      state.isLoading = false;
+      state.isSuccess = true;
+      state.user?.seenNotifications?.push(payload);
+    });
+=======
+>>>>>>> 0098bee24d3f0aedadf8e626edd42bfbe57a4104
   },
 });
 

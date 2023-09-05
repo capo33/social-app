@@ -48,8 +48,16 @@ const followUser = async (followId: string, userId: string, token: string) => {
 };
 
 // unfollow a user
+<<<<<<< HEAD
+const unfollowUser = async (
+  unfollowId: string,
+  userId: string,
+  token: string
+) => {
+=======
 
 const unfollowUser = async (unfollowId: string, userId: string, token: string) => {
+>>>>>>> 0098bee24d3f0aedadf8e626edd42bfbe57a4104
   const response = await axios.put(
     `${USER_URL}/unfollow/`,
     {
@@ -65,12 +73,29 @@ const unfollowUser = async (unfollowId: string, userId: string, token: string) =
   return response.data;
 };
 
+<<<<<<< HEAD
+// get notifications
+const getNotifications = async (token: string) => {
+  const response = await axios.get(`${USER_URL}/get-all-notifications`, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+  return response.data;
+};
+
+=======
+>>>>>>> 0098bee24d3f0aedadf8e626edd42bfbe57a4104
 const userService = {
   getUserProfile,
   updateUserProfile,
   getUserProfileById,
   followUser,
   unfollowUser,
+<<<<<<< HEAD
+  getNotifications,
+=======
+>>>>>>> 0098bee24d3f0aedadf8e626edd42bfbe57a4104
 };
 
 export default userService;
