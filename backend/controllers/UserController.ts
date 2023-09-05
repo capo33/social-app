@@ -154,25 +154,85 @@ const getUserById = async (req: Request, res: Response): Promise<void> => {
 const followUser = async (req: Request, res: Response): Promise<void> => {
   try {
     // We are following this user now - so we add this user to our following list
-    const user = await UserModel.findByIdAndUpdate(
-      req.body.followId, // followId is the id of the user we want to follow
+    // const user = await UserModel.findByIdAndUpdate(
+    //   req.body.followId, // followId is the id of the user we want to follow
+    //   {
+    //     // we are adding the user id to the following array
+    //     $push: {
+    //       followers: req.user?._id,
+    //       notification: {
+    //         title: "New follower",
+    //         _id: req.user?._id,
+    //       },
+    //     },
+    //   },
+    //   { new: true }
+    // ).select("-password");
+    // const notification = user?.notifications;
+    // // This user is following us now - so we add this user to our followers list
+    // const me = await UserModel.findByIdAndUpdate(
+    //   req.user?._id,
+    //   {
+    //     $push: {
+    //       following: req.body.followId,
+    //       notifications: {
+    //         title: "New follower",
+    //         description: `${user?.username} started following you`,
+    //         name: user?.username,
+    //         _id: user?._id,
+    //       },
+    //     },
+    //   },
+    //   { new: true }
+    // ).select("-password");
+
+    // res.status(200).json({ user, me });
+
+    const user = await UserModel.findById(req?.user?._id);
+    if (!user) {
+      res.status(404);
+      throw new Error("User not found");
+    }
+    const notification = user.notifications;
+
+    notification.push({
+      title: "New follower",
+      description: `${user.username} started following you`,
+      name: user.username,
+      _id: user._id,
+    });
+
+    if (user.notifications.length > 1) {
+      res.status(400);
+      throw new Error("You have already sent a notification");
+    }
+    const guest = await UserModel.findByIdAndUpdate(
+      req.body.followId,
       {
-        // we are adding the user id to the following array
-        $push: { followers: req.user?._id },
+        $push: {
+          followers: req.user?._id,
+          notifications: {
+            title: "New follower",
+            description: `${user?.username} started following you`,
+            name: user?.username,
+            _id: user?._id,
+          },
+        },
       },
       { new: true }
-    ).select("-password");
+    );
 
-    // This user is following us now - so we add this user to our followers list
     const me = await UserModel.findByIdAndUpdate(
       req.user?._id,
       {
-        $push: { following: req.body.followId },
+        $push: {
+          following: req.body.followId,
+        },
       },
       { new: true }
     ).select("-password");
 
-    res.status(200).json({ user, me });
+    res.status(200).json({ guest, me });
   } catch (error) {
     if (error instanceof Error) {
       res.status(400).json({
@@ -188,17 +248,45 @@ const followUser = async (req: Request, res: Response): Promise<void> => {
 // @access  Private
 const unfollowUser = async (req: Request, res: Response): Promise<void> => {
   try {
-    // We are unfollowing this user now - so we remove this user from our following list
-    const user = await UserModel.findByIdAndUpdate(
-      req.body.unfollowId, // unfollowId is the id of the user we want to unfollow
+    // // We are unfollowing this user now - so we remove this user from our following list
+    // const user = await UserModel.findByIdAndUpdate(
+    //   req.body.unfollowId, // unfollowId is the id of the user we want to unfollow
+    //   {
+    //     // we are removing the user id from the following array
+    //     $pull: { followers: req.user?._id },
+    //   },
+    //   { new: true }
+    // ).select("-password");
+
+    // // This user is unfollowing us now - so we remove this user from our followers list
+    // const me = await UserModel.findByIdAndUpdate(
+    //   req.user?._id,
+    //   {
+    //     $pull: { following: req.body.unfollowId },
+    //   },
+    //   { new: true }
+    // ).select("-password");
+
+    // res.status(200).json({ user, me });
+
+    const user = await UserModel.findById(req?.user?._id);
+    if (!user) {
+      res.status(404);
+      throw new Error("User not found");
+    }
+    let notification = user.notifications;
+
+    notification = [];
+
+    const guest = await UserModel.findByIdAndUpdate(
+      req.body.unfollowId,
       {
-        // we are removing the user id from the following array
         $pull: { followers: req.user?._id },
+        notifications: notification,
       },
       { new: true }
-    ).select("-password");
+    );
 
-    // This user is unfollowing us now - so we remove this user from our followers list
     const me = await UserModel.findByIdAndUpdate(
       req.user?._id,
       {
@@ -207,7 +295,7 @@ const unfollowUser = async (req: Request, res: Response): Promise<void> => {
       { new: true }
     ).select("-password");
 
-    res.status(200).json({ user, me });
+    res.status(200).json({ guest, me });
   } catch (error) {
     if (error instanceof Error) {
       res.status(400).json({
