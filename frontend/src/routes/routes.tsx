@@ -13,6 +13,7 @@ import {
 } from "../pages/User/Index";
 import { ForgotPassword, Login, Register } from "../pages/auth/Index";
 import PostDetails from "../pages/Post/PostDetails";
+import SavedPosts from "../pages/Post/SavedPosts";
 
 const routes = createBrowserRouter(
   createRoutesFromElements(
@@ -26,6 +27,7 @@ const routes = createBrowserRouter(
       <Route path='update-profile' element={<UpdateProfile />} />
       <Route path='profile/:id' element={<UserProfile />} />
       <Route path='notifications' element={<Notifications />} />
+      <Route path='savedPosts' element={<SavedPosts />} />
       <Route path=':title/:id' element={<PostDetails />} />
     </Route>
   )

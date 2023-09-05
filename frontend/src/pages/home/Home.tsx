@@ -120,7 +120,6 @@ export default function Home() {
 
             return (
               <Grid item key={post?._id} xs={12} sm={6}>
-                {/* {console.log(savedPosts?.includes(post?._id!))} */}
                 <Card>
                   {/* Navigate to my own profile or to the other user profile */}
                   <CardHeader
@@ -154,14 +153,13 @@ export default function Home() {
 
                   {/* Image */}
                   <Link to={`/${post?.title}/${post?._id}`}>
-
-                  <CardMedia
-                    component='img'
-                    height='194'
-                    image={post?.image}
-                    alt={post?.title}
+                    <CardMedia
+                      component='img'
+                      height='194'
+                      image={post?.image}
+                      alt={post?.title}
                     />
-                    </Link>
+                  </Link>
                   <CardContent>
                     <Typography variant='body2' color='text.secondary'>
                       {post?.description}

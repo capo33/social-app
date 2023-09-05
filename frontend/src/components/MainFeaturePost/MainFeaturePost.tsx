@@ -6,8 +6,6 @@ interface FeaturedPostProps {
 }
 
 export default function MainFeaturePost({ image, title }: FeaturedPostProps) {
-  console.log(image);
-
   return (
     <Paper
       sx={{
@@ -22,7 +20,6 @@ export default function MainFeaturePost({ image, title }: FeaturedPostProps) {
         backgroundImage: `url(${image})`,
       }}
     >
-      
       <Box
         sx={{
           position: "absolute",

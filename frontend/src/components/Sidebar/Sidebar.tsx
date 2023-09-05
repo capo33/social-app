@@ -51,21 +51,7 @@ export default function Sidebar(props: Props) {
     }
   }, [user, token, dispatch]);
 
-  // React.useEffect(() => {
-  //   if (x) {
-  //     dispatch(userProfileById(x as string));
-  //   }
-  // }, [dispatch, x]);
-
-  // React.useEffect(() => {
-  //   if (user) {
-  //     dispatch(getNotifications({
-  //       userId: user._id as string,
-  //       token: user.token as string,
-  //     }));
-  //   }
-  // }, [dispatch, token, user]);
-
+ 
   const handleDrawerToggle = () => {
     setMobileOpen(!mobileOpen);
   };
@@ -97,7 +83,7 @@ export default function Sidebar(props: Props) {
     {
       label: "Saved",
       icon: <BookmarkIcon sx={{ fontSize: 30 }} />,
-      path: "/saved",
+      path: "/savedPosts",
     },
     {
       label: "Create Post",

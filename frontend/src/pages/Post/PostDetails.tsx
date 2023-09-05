@@ -8,9 +8,10 @@ import { useAppDispatch, useAppSelector } from "../../redux/app/store";
 
 const PostDetails = () => {
   const { id } = useParams<{ id: string }>();
- 
+
   const { post } = useAppSelector((state) => state.posts);
-   const dispatch = useAppDispatch();
+
+  const dispatch = useAppDispatch();
 
   React.useEffect(() => {
     dispatch(getPostById(id as string));
