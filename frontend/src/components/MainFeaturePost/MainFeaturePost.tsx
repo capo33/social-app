@@ -22,6 +22,7 @@ export default function MainFeaturePost({ image, title }: FeaturedPostProps) {
         backgroundImage: `url(${image})`,
       }}
     >
+      
       <Box
         sx={{
           position: "absolute",
