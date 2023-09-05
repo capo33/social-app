@@ -25,12 +25,17 @@ import FavoriteIcon from "@mui/icons-material/Favorite";
 import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 import BookmarkBorderIcon from "@mui/icons-material/BookmarkBorder";
+<<<<<<< HEAD
 import BookmarkIcon from "@mui/icons-material/Bookmark";
+=======
+
+>>>>>>> 0098bee24d3f0aedadf8e626edd42bfbe57a4104
 import {
   commentPost,
   deleteCommentPost,
   deletePost,
   getAllPosts,
+<<<<<<< HEAD
   getSavedPosts,
   likePost,
   savePost,
@@ -58,6 +63,26 @@ export default function Home() {
   useEffect(() => {
     dispatch(getSavedPosts({ userId: me?._id as string, token }));
   }, [dispatch, me, token]);
+=======
+  likePost,
+  unlikePost,
+} from "../../redux/fetures/Post/postSlice";
+import { formatDate } from "../../utils/Index";
+import { useAppDispatch, useAppSelector } from "../../redux/app/store";
+import { CommentInput } from "../../components/Index";
+ 
+export default function Home() {
+  const { posts } = useAppSelector((state) => state.posts);
+  const { user } = useAppSelector((state) => state.auth);
+
+  const dispatch = useAppDispatch();
+  const token = user?.token as string;
+
+  useEffect(() => {
+    dispatch(getAllPosts());
+  }, [dispatch]);
+
+>>>>>>> 0098bee24d3f0aedadf8e626edd42bfbe57a4104
   // Like post
   const handleLike = async (id: string) => {
     dispatch(likePost({ postId: id, token }));
@@ -78,6 +103,7 @@ export default function Home() {
     dispatch(deleteCommentPost({ postId, commentId, token }));
   };
 
+<<<<<<< HEAD
   // Save Recipe
   const handleSaveRecipe = (postId: string) => {
     dispatch(
@@ -100,6 +126,8 @@ export default function Home() {
     );
   };
 
+=======
+>>>>>>> 0098bee24d3f0aedadf8e626edd42bfbe57a4104
   return (
     <Container maxWidth='lg' sx={{ my: 10 }}>
       <Box>
@@ -152,6 +180,7 @@ export default function Home() {
                   />
 
                   {/* Image */}
+<<<<<<< HEAD
                   <Link to={`/${post?.title}/${post?._id}`}>
                     <CardMedia
                       component='img'
@@ -160,6 +189,14 @@ export default function Home() {
                       alt={post?.title}
                     />
                   </Link>
+=======
+                  <CardMedia
+                    component='img'
+                    height='194'
+                    image={post?.image}
+                    alt={post?.title}
+                  />
+>>>>>>> 0098bee24d3f0aedadf8e626edd42bfbe57a4104
                   <CardContent>
                     <Typography variant='body2' color='text.secondary'>
                       {post?.description}
@@ -191,6 +228,7 @@ export default function Home() {
                       )}
                     </CardActions>
                     <CardActions disableSpacing>
+<<<<<<< HEAD
                       {/* {postIds?.includes(post?._id!) ? ( */}
                       {postIds?.includes(post?._id as any) ? (
                         <IconButton
@@ -205,6 +243,11 @@ export default function Home() {
                           <BookmarkBorderIcon sx={{ color: "black" }} />
                         </IconButton>
                       )}
+=======
+                      <IconButton aria-label='Save'>
+                        <BookmarkBorderIcon />
+                      </IconButton>
+>>>>>>> 0098bee24d3f0aedadf8e626edd42bfbe57a4104
                     </CardActions>
                   </Stack>
 

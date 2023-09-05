@@ -1,5 +1,8 @@
 import * as React from "react";
+<<<<<<< HEAD
 import { Link, useNavigate } from "react-router-dom";
+=======
+>>>>>>> 0098bee24d3f0aedadf8e626edd42bfbe57a4104
 // Material UI
 import {
   Box,
@@ -12,7 +15,10 @@ import {
   ListItemIcon,
   ListItemText,
   Avatar,
+<<<<<<< HEAD
   Badge,
+=======
+>>>>>>> 0098bee24d3f0aedadf8e626edd42bfbe57a4104
 } from "@mui/material";
 
 // Material UI Icons
@@ -23,9 +29,16 @@ import BookmarkIcon from "@mui/icons-material/Bookmark";
 import AddCircleIcon from "@mui/icons-material/AddCircle";
 import NotificationsIcon from "@mui/icons-material/Notifications";
 
+<<<<<<< HEAD
 import { logout } from "../../redux/fetures/Auth/authSlice";
 import { userProfile } from "../../redux/fetures/User/userSlice";
 import { useAppSelector, useAppDispatch } from "../../redux/app/store";
+=======
+import { Link, useNavigate } from "react-router-dom";
+import { logout } from "../../redux/fetures/Auth/authSlice";
+import { useAppSelector, useAppDispatch } from "../../redux/app/store";
+import { userProfile } from "../../redux/fetures/User/userSlice";
+>>>>>>> 0098bee24d3f0aedadf8e626edd42bfbe57a4104
 
 const drawerWidth = 240;
 
@@ -38,11 +51,16 @@ export default function Sidebar(props: Props) {
 
   const { user } = useAppSelector((state) => state.auth);
   const { user: userAfterUpdate } = useAppSelector((state) => state.user);
+<<<<<<< HEAD
+=======
+
+>>>>>>> 0098bee24d3f0aedadf8e626edd42bfbe57a4104
   const { window } = props;
 
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
 
+<<<<<<< HEAD
   const token = user?.token as string;
 
   React.useEffect(() => {
@@ -52,6 +70,14 @@ export default function Sidebar(props: Props) {
   }, [user, token, dispatch]);
 
  
+=======
+  React.useEffect(() => {
+    if (user) {
+      dispatch(userProfile(user.token));
+    }
+  }, [user, dispatch]);
+
+>>>>>>> 0098bee24d3f0aedadf8e626edd42bfbe57a4104
   const handleDrawerToggle = () => {
     setMobileOpen(!mobileOpen);
   };
@@ -70,6 +96,7 @@ export default function Sidebar(props: Props) {
     },
     {
       label: "Notifications",
+<<<<<<< HEAD
       icon: (
         <Badge
           badgeContent={userAfterUpdate?.notifications?.length}
@@ -78,12 +105,19 @@ export default function Sidebar(props: Props) {
           <NotificationsIcon />
         </Badge>
       ),
+=======
+      icon: <NotificationsIcon sx={{ fontSize: 30 }} />,
+>>>>>>> 0098bee24d3f0aedadf8e626edd42bfbe57a4104
       path: "/notifications",
     },
     {
       label: "Saved",
       icon: <BookmarkIcon sx={{ fontSize: 30 }} />,
+<<<<<<< HEAD
       path: "/savedPosts",
+=======
+      path: "/saved",
+>>>>>>> 0098bee24d3f0aedadf8e626edd42bfbe57a4104
     },
     {
       label: "Create Post",

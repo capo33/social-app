@@ -88,7 +88,11 @@ export const followUser = createAsyncThunk(
       userId,
       token,
     }: { followId: string; userId: string; token: string },
+<<<<<<< HEAD
 
+=======
+   
+>>>>>>> 0098bee24d3f0aedadf8e626edd42bfbe57a4104
     thunkAPI
   ) => {
     try {
@@ -138,6 +142,7 @@ export const unfollowUser = createAsyncThunk(
   }
 );
 
+<<<<<<< HEAD
 // Get notifications
 export const getNotifications = createAsyncThunk(
   "auth/getNotifications",
@@ -156,6 +161,8 @@ export const getNotifications = createAsyncThunk(
     }
   }
 );
+=======
+>>>>>>> 0098bee24d3f0aedadf8e626edd42bfbe57a4104
 
 export const userSlice = createSlice({
   name: "user",
@@ -221,6 +228,7 @@ export const userSlice = createSlice({
       state.isError = true;
       state.message = payload as string;
     });
+<<<<<<< HEAD
 
     // Unfollow user
     builder.addCase(unfollowUser.pending, (state) => {
@@ -246,6 +254,8 @@ export const userSlice = createSlice({
       state.isSuccess = true;
       state.user?.seenNotifications?.push(payload);
     });
+=======
+>>>>>>> 0098bee24d3f0aedadf8e626edd42bfbe57a4104
   },
 });
 

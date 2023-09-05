@@ -279,9 +279,12 @@ export const savePost = createAsyncThunk(
     try {
       const response = await postServices.savePost(postId, userId, token);
       thunkAPI.dispatch(getAllPosts());
+<<<<<<< HEAD
       thunkAPI.dispatch(getSavedPosts({ userId, token }));
       console.log("response", response);
 
+=======
+>>>>>>> 0098bee24d3f0aedadf8e626edd42bfbe57a4104
       return response;
     } catch (error: unknown | any) {
       const message =
@@ -309,9 +312,12 @@ export const unsavePost = createAsyncThunk(
     try {
       const response = await postServices.unsavePost(postId, userId, token);
       thunkAPI.dispatch(getAllPosts());
+<<<<<<< HEAD
       thunkAPI.dispatch(getSavedPosts({ userId, token }));
       console.log("response", response);
 
+=======
+>>>>>>> 0098bee24d3f0aedadf8e626edd42bfbe57a4104
       return response;
     } catch (error: unknown | any) {
       const message =
@@ -516,7 +522,17 @@ const postSlice = createSlice({
     builder.addCase(savePost.fulfilled, (state, { payload }) => {
       state.isLoading = false;
       state.isSuccess = true;
+<<<<<<< HEAD
       state.savedPosts = payload as IPost[];
+=======
+      const newdata = state.posts.map((post: IPost) => {
+        if (post?._id === payload?.data?._id) {
+          return payload?.data;
+        }
+        return post;
+      });
+      state.savedPosts = newdata;
+>>>>>>> 0098bee24d3f0aedadf8e626edd42bfbe57a4104
     });
     builder.addCase(savePost.rejected, (state, { payload }) => {
       state.isLoading = false;
@@ -531,13 +547,24 @@ const postSlice = createSlice({
     builder.addCase(unsavePost.fulfilled, (state, { payload }) => {
       state.isLoading = false;
       state.isSuccess = true;
+<<<<<<< HEAD
       state.savedPosts = payload as IPost[];
+=======
+      const newdata = state.posts.map((post: IPost) => {
+        if (post?._id === payload?.data?._id) {
+          return payload?.data;
+        }
+        return post;
+      });
+      state.savedPosts = newdata;
+>>>>>>> 0098bee24d3f0aedadf8e626edd42bfbe57a4104
     });
     builder.addCase(unsavePost.rejected, (state, { payload }) => {
       state.isLoading = false;
       state.isError = true;
       state.message = payload as string;
     });
+<<<<<<< HEAD
 
     // get saved posts
     builder.addCase(getSavedPosts.pending, (state) => {
@@ -555,6 +582,8 @@ const postSlice = createSlice({
       state.isError = true;
       state.message = payload as string;
     });
+=======
+>>>>>>> 0098bee24d3f0aedadf8e626edd42bfbe57a4104
   },
 });
 
