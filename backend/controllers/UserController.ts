@@ -276,6 +276,7 @@ const unfollowUser = async (req: Request, res: Response): Promise<void> => {
     }
     let notification = user.notifications;
 
+    
     notification = [];
 
     const guest = await UserModel.findByIdAndUpdate(
