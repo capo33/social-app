@@ -18,10 +18,6 @@ export interface IUser {
   image?: string;
   followers?: string[];
   following?: string[];
-<<<<<<< HEAD
-  savedPosts?: IPost[];
-=======
->>>>>>> 0098bee24d3f0aedadf8e626edd42bfbe57a4104
   bio: string;
   notifications?: NotificationType[];
   seenNotifications?: NotificationType[];

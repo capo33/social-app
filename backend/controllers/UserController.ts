@@ -154,8 +154,7 @@ const getUserById = async (req: Request, res: Response): Promise<void> => {
 const followUser = async (req: Request, res: Response): Promise<void> => {
   try {
     // We are following this user now - so we add this user to our following list
-<<<<<<< HEAD
-    // const user = await UserModel.findByIdAndUpdate(
+     // const user = await UserModel.findByIdAndUpdate(
     //   req.body.followId, // followId is the id of the user we want to follow
     //   {
     //     // we are adding the user id to the following array
@@ -229,32 +228,12 @@ const followUser = async (req: Request, res: Response): Promise<void> => {
         $push: {
           following: req.body.followId,
         },
-=======
-    const user = await UserModel.findByIdAndUpdate(
-      req.body.followId, // followId is the id of the user we want to follow
-      {
-        // we are adding the user id to the following array
-        $push: { followers: req.user?._id },
-      },
+       },
       { new: true }
     ).select("-password");
 
-    // This user is following us now - so we add this user to our followers list
-    const me = await UserModel.findByIdAndUpdate(
-      req.user?._id,
-      {
-        $push: { following: req.body.followId },
->>>>>>> 0098bee24d3f0aedadf8e626edd42bfbe57a4104
-      },
-      { new: true }
-    ).select("-password");
-
-<<<<<<< HEAD
-    res.status(200).json({ guest, me });
-=======
-    res.status(200).json({ user, me });
->>>>>>> 0098bee24d3f0aedadf8e626edd42bfbe57a4104
-  } catch (error) {
+     res.status(200).json({ guest, me });
+   } catch (error) {
     if (error instanceof Error) {
       res.status(400).json({
         success: false,
@@ -269,8 +248,7 @@ const followUser = async (req: Request, res: Response): Promise<void> => {
 // @access  Private
 const unfollowUser = async (req: Request, res: Response): Promise<void> => {
   try {
-<<<<<<< HEAD
-    // // We are unfollowing this user now - so we remove this user from our following list
+     // // We are unfollowing this user now - so we remove this user from our following list
     // const user = await UserModel.findByIdAndUpdate(
     //   req.body.unfollowId, // unfollowId is the id of the user we want to unfollow
     //   {
@@ -309,20 +287,7 @@ const unfollowUser = async (req: Request, res: Response): Promise<void> => {
       { new: true }
     );
 
-=======
-    // We are unfollowing this user now - so we remove this user from our following list
-    const user = await UserModel.findByIdAndUpdate(
-      req.body.unfollowId, // unfollowId is the id of the user we want to unfollow
-      {
-        // we are removing the user id from the following array
-        $pull: { followers: req.user?._id },
-      },
-      { new: true }
-    ).select("-password");
-
-    // This user is unfollowing us now - so we remove this user from our followers list
->>>>>>> 0098bee24d3f0aedadf8e626edd42bfbe57a4104
-    const me = await UserModel.findByIdAndUpdate(
+     const me = await UserModel.findByIdAndUpdate(
       req.user?._id,
       {
         $pull: { following: req.body.unfollowId },
@@ -330,12 +295,8 @@ const unfollowUser = async (req: Request, res: Response): Promise<void> => {
       { new: true }
     ).select("-password");
 
-<<<<<<< HEAD
-    res.status(200).json({ guest, me });
-=======
-    res.status(200).json({ user, me });
->>>>>>> 0098bee24d3f0aedadf8e626edd42bfbe57a4104
-  } catch (error) {
+     res.status(200).json({ guest, me });
+   } catch (error) {
     if (error instanceof Error) {
       res.status(400).json({
         success: false,
@@ -361,17 +322,11 @@ const sendNotifications = async (
     const notification = user.notifications;
 
     notification.push({
-<<<<<<< HEAD
-      _id: user._id,
+       _id: user._id,
       title: "New follower",
       description: `${user.username} started following you`,
       name: user.username,
-=======
-      title: "New follower",
-      description: `${user.username} started following you`,
-      name: user.username,
-      _id: user._id,
->>>>>>> 0098bee24d3f0aedadf8e626edd42bfbe57a4104
+ 
     });
 
     if (user.notifications.length > 1) {
@@ -428,25 +383,12 @@ const getNotifications = async (req: Request, res: Response): Promise<void> => {
     user.seenNotifications = notifications;
 
     // We are saving the user
-<<<<<<< HEAD
-    await user.save();
-=======
-    const updatedUser = await user.save();
->>>>>>> 0098bee24d3f0aedadf8e626edd42bfbe57a4104
-
+     await user.save();
+ 
     res.status(200).json({
       success: true,
       message: "All notifications marked as seen",
-<<<<<<< HEAD
-=======
-      data: {
-        name: updatedUser.username,
-        email: updatedUser.email,
-        notifications: updatedUser.notifications,
-        seenNotifications: updatedUser.seenNotifications,
-      },
->>>>>>> 0098bee24d3f0aedadf8e626edd42bfbe57a4104
-    });
+     });
   } catch (error) {
     if (error instanceof Error) {
       res.status(400).json({
