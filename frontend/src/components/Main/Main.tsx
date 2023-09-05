@@ -4,12 +4,12 @@ import Typography from "@mui/material/Typography";
 import Divider from "@mui/material/Divider";
 
 interface MainProps {
-  posts: ReadonlyArray<string>;
-  title: string;
+  post: string;
+  description: string;
 }
 
 export default function Main(props: MainProps) {
-  const { posts, title } = props;
+  const { post, description } = props;
 
   return (
     <Grid
@@ -22,11 +22,13 @@ export default function Main(props: MainProps) {
         },
       }}
     >
-      <Typography variant='h6' gutterBottom>
-        {title}
+      <Typography variant='h4' gutterBottom>
+        {description}
       </Typography>
       <Divider />
-      {posts.map((post) => post)}
+      <Typography variant='h6' gutterBottom>
+        {post}
+      </Typography>
     </Grid>
   );
 }
