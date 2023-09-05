@@ -1,4 +1,5 @@
 import * as React from "react";
+import { Link, useNavigate } from "react-router-dom";
 // Material UI
 import {
   Box,
@@ -11,6 +12,7 @@ import {
   ListItemIcon,
   ListItemText,
   Avatar,
+  Badge,
 } from "@mui/material";
 
 // Material UI Icons
@@ -21,10 +23,9 @@ import BookmarkIcon from "@mui/icons-material/Bookmark";
 import AddCircleIcon from "@mui/icons-material/AddCircle";
 import NotificationsIcon from "@mui/icons-material/Notifications";
 
-import { Link, useNavigate } from "react-router-dom";
 import { logout } from "../../redux/fetures/Auth/authSlice";
-import { useAppSelector, useAppDispatch } from "../../redux/app/store";
 import { userProfile } from "../../redux/fetures/User/userSlice";
+import { useAppSelector, useAppDispatch } from "../../redux/app/store";
 
 const drawerWidth = 240;
 
@@ -37,17 +38,33 @@ export default function Sidebar(props: Props) {
 
   const { user } = useAppSelector((state) => state.auth);
   const { user: userAfterUpdate } = useAppSelector((state) => state.user);
-
   const { window } = props;
 
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
 
+  const token = user?.token as string;
+
   React.useEffect(() => {
     if (user) {
-      dispatch(userProfile(user.token));
+      dispatch(userProfile(token));
     }
-  }, [user, dispatch]);
+  }, [user, token, dispatch]);
+
+  // React.useEffect(() => {
+  //   if (x) {
+  //     dispatch(userProfileById(x as string));
+  //   }
+  // }, [dispatch, x]);
+
+  // React.useEffect(() => {
+  //   if (user) {
+  //     dispatch(getNotifications({
+  //       userId: user._id as string,
+  //       token: user.token as string,
+  //     }));
+  //   }
+  // }, [dispatch, token, user]);
 
   const handleDrawerToggle = () => {
     setMobileOpen(!mobileOpen);
@@ -67,7 +84,14 @@ export default function Sidebar(props: Props) {
     },
     {
       label: "Notifications",
-      icon: <NotificationsIcon sx={{ fontSize: 30 }} />,
+      icon: (
+        <Badge
+          badgeContent={userAfterUpdate?.notifications?.length}
+          color='error'
+        >
+          <NotificationsIcon />
+        </Badge>
+      ),
       path: "/notifications",
     },
     {

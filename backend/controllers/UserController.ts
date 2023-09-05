@@ -202,20 +202,20 @@ const followUser = async (req: Request, res: Response): Promise<void> => {
       _id: user._id,
     });
 
-    if (user.notifications.length > 1) {
-      res.status(400);
-      throw new Error("You have already sent a notification");
-    }
+    // if (user.notifications.length > 1) {
+    //   res.status(400);
+    //   throw new Error("You have already sent a notification");
+    // }
     const guest = await UserModel.findByIdAndUpdate(
       req.body.followId,
       {
         $push: {
           followers: req.user?._id,
           notifications: {
+            _id: user?._id,
             title: "New follower",
             description: `${user?.username} started following you`,
             name: user?.username,
-            _id: user?._id,
           },
         },
       },
@@ -276,14 +276,13 @@ const unfollowUser = async (req: Request, res: Response): Promise<void> => {
     }
     let notification = user.notifications;
 
-    
     notification = [];
 
     const guest = await UserModel.findByIdAndUpdate(
       req.body.unfollowId,
       {
         $pull: { followers: req.user?._id },
-        notifications: notification,
+        // notifications: notification,
       },
       { new: true }
     );
@@ -323,10 +322,10 @@ const sendNotifications = async (
     const notification = user.notifications;
 
     notification.push({
+      _id: user._id,
       title: "New follower",
       description: `${user.username} started following you`,
       name: user.username,
-      _id: user._id,
     });
 
     if (user.notifications.length > 1) {
@@ -383,17 +382,11 @@ const getNotifications = async (req: Request, res: Response): Promise<void> => {
     user.seenNotifications = notifications;
 
     // We are saving the user
-    const updatedUser = await user.save();
+    await user.save();
 
     res.status(200).json({
       success: true,
       message: "All notifications marked as seen",
-      data: {
-        name: updatedUser.username,
-        email: updatedUser.email,
-        notifications: updatedUser.notifications,
-        seenNotifications: updatedUser.seenNotifications,
-      },
     });
   } catch (error) {
     if (error instanceof Error) {
